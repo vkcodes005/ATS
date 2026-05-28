@@ -1,0 +1,83 @@
+{
+  "participants": [
+    {
+      "id": "p-001",
+      "code": "ATS-DAN-001",
+      "name": "Aarav Mehta",
+      "profession": "Dancer",
+      "active": true,
+      "image": "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=700&q=85"
+    },
+    {
+      "id": "p-002",
+      "code": "ATS-SNG-002",
+      "name": "Naina Kapoor",
+      "profession": "Singer",
+      "active": true,
+      "image": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=700&q=85"
+    },
+    {
+      "id": "p-003",
+      "code": "ATS-MOD-003",
+      "name": "Kabir Sethi",
+      "profession": "Model",
+      "active": true,
+      "image": "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=700&q=85"
+    },
+    {
+      "id": "p-004",
+      "code": "ATS-INF-004",
+      "name": "Meera Rao",
+      "profession": "Influencer",
+      "active": true,
+      "image": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=700&q=85"
+    },
+    {
+      "code": "ATS-DAN-07695",
+      "name": "vaishnavi kashyap",
+      "profession": "Dancer",
+      "image": "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=700&q=85",
+      "active": true,
+      "phone": "7261053273",
+      "email": "vaishnavikashyap088@gmail.com",
+      "city": "samastipur",
+      "id": "participant-1779968007705-532ec8"
+    }
+  ],
+  "sports": [
+    {
+      "id": "s-001",
+      "name": "Dance Battle",
+      "category": "Stage",
+      "active": true
+    },
+    {
+      "id": "s-002",
+      "name": "Singing League",
+      "category": "Music",
+      "active": true
+    },
+    {
+      "id": "s-003",
+      "name": "Ramp Walk",
+      "category": "Fashion",
+      "active": true
+    }
+  ],
+  "leads": [
+    {
+      "name": "vaishnavi kashyap",
+      "email": "vaishnavikashyap088@gmail.com",
+      "phone": "7261053273",
+      "city": "samastipur",
+      "interest": "Audience",
+      "id": "lead-1779967528718-b3a6fe",
+      "createdAt": "2026-05-28T11:25:28.718Z"
+    }
+  ],
+  "brochure": {
+    "fileName": "ats-2026-brochure.pdf",
+    "path": "uploads/ats-2026-brochure.pdf",
+    "updatedAt": "2026-05-28T00:00:00.000Z"
+  }
+}
