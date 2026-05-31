@@ -106,7 +106,6 @@ function Header({ onBrochure }) {
               {label}
             </a>
           ))}
-          <a href="/admin" className="rounded-lg px-3 py-2 text-sm font-semibold text-tertiary transition hover:bg-white/5">Admin</a>
         </div>
         <button onClick={onBrochure} className="inline-flex items-center gap-2 rounded-lg bg-secondary-fixed-dim px-4 py-2 text-sm font-bold text-[#071013] transition hover:bg-white">
           <Icon className="text-lg">download</Icon>
