@@ -85,6 +85,7 @@ function Icon({ children, className = "" }) {
 }
 
 function Header({ onBrochure }) {
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const links = [
     ["Home", "#home"],
     ["Artists", "#artists"],
@@ -107,11 +108,43 @@ function Header({ onBrochure }) {
             </a>
           ))}
         </div>
-        <button onClick={onBrochure} className="inline-flex items-center gap-2 rounded-lg bg-secondary-fixed-dim px-4 py-2 text-sm font-bold text-[#071013] transition hover:bg-white">
-          <Icon className="text-lg">download</Icon>
-          <span className="hidden sm:inline">Brochure</span>
-        </button>
+        <div className="flex items-center gap-3">
+          <button onClick={onBrochure} className="hidden items-center gap-2 rounded-lg bg-secondary-fixed-dim px-4 py-2 text-sm font-bold text-[#071013] transition hover:bg-white sm:inline-flex">
+            <Icon className="text-lg">download</Icon>
+            <span>Brochure</span>
+          </button>
+          <button onClick={() => setDrawerOpen(true)} className="inline-grid h-10 w-10 place-items-center rounded-lg border border-white/10 text-on-surface-variant transition hover:border-secondary-fixed-dim hover:text-secondary-fixed-dim lg:hidden" aria-label="Open menu">
+            <Icon>menu</Icon>
+          </button>
+        </div>
       </nav>
+      {drawerOpen && (
+        <div className="fixed inset-0 z-[90] lg:hidden">
+          <button className="absolute inset-0 bg-black/70" onClick={() => setDrawerOpen(false)} aria-label="Close menu overlay" />
+          <aside className="absolute right-0 top-0 flex h-screen w-[min(84vw,340px)] flex-col border-l border-white/10 bg-[#101016] p-5 shadow-2xl">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="grid h-10 w-10 place-items-center rounded-lg border border-secondary-fixed-dim/50 bg-white/5 font-display text-sm font-extrabold text-secondary-fixed-dim">ATS</span>
+                <span className="font-display text-xl font-extrabold text-white">ATS 2026</span>
+              </div>
+              <button onClick={() => setDrawerOpen(false)} className="grid h-10 w-10 place-items-center rounded-lg border border-white/10 text-on-surface-variant hover:text-white" aria-label="Close menu">
+                <Icon>close</Icon>
+              </button>
+            </div>
+            <div className="mt-8 grid gap-3">
+              {links.map(([label, href]) => (
+                <a key={label} href={href} onClick={() => setDrawerOpen(false)} className="rounded-lg border border-white/10 bg-white/[0.04] px-4 py-4 font-semibold text-on-surface-variant transition hover:border-secondary-fixed-dim hover:text-secondary-fixed-dim">
+                  {label}
+                </a>
+              ))}
+              <button onClick={() => { setDrawerOpen(false); onBrochure(); }} className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-secondary-fixed-dim px-4 py-4 font-bold text-[#071013] transition hover:bg-white">
+                <Icon>download</Icon>
+                Brochure
+              </button>
+            </div>
+          </aside>
+        </div>
+      )}
     </header>
   );
 }
