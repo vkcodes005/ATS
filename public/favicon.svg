@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <rect width="128" height="128" rx="24" fill="#0a0a0f"/>
+  <path d="M22 87h84" stroke="#00daf3" stroke-width="8" stroke-linecap="round"/>
+  <path d="M37 83V45h12v38M58 83V33h12v50M79 83V55h12v28" stroke="#ffb59a" stroke-width="8" stroke-linecap="round"/>
+  <text x="64" y="112" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="800" fill="#ffffff">ATS</text>
+</svg>

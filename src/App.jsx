@@ -20,6 +20,23 @@ const emptyEvent = { title: "", date: "", venue: "", details: "", active: true }
 const emptyBrochure = { id: "", title: "", active: true };
 const maxBrochureSize = 30 * 1024 * 1024;
 const fallbackImage = "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=700&q=85";
+const fallbackSvg = `data:image/svg+xml,${encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 700">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop stop-color="#0a0a0f"/>
+      <stop offset="0.55" stop-color="#15121c"/>
+      <stop offset="1" stop-color="#0b2f38"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="700" fill="url(#bg)"/>
+  <circle cx="690" cy="125" r="170" fill="#00daf3" opacity="0.16"/>
+  <circle cx="170" cy="560" r="220" fill="#ffb59a" opacity="0.13"/>
+  <rect x="110" y="150" width="680" height="400" rx="28" fill="#ffffff" opacity="0.055" stroke="#ffffff" stroke-opacity="0.18"/>
+  <text x="450" y="330" fill="#ffffff" font-family="Arial, sans-serif" font-size="72" font-weight="800" text-anchor="middle">ATS 2026</text>
+  <text x="450" y="392" fill="#00daf3" font-family="Arial, sans-serif" font-size="28" font-weight="700" text-anchor="middle">Artist Talent Show</text>
+</svg>
+`)}`;
 const fallbackServices = [
   ["Talent Registration", "End-to-end participant onboarding for performers, creators, models, and stage artists.", "how_to_reg", "border-secondary-fixed-dim/30"],
   ["Live Event Production", "Professional stage planning, audience flow, lighting, sound, and backstage coordination.", "stadium", "border-tertiary/40"],
@@ -131,6 +148,21 @@ function Icon({ children, className = "" }) {
   return <span className={`material-symbols-outlined ${className}`}>{children}</span>;
 }
 
+function SafeImage({ src, alt, className = "", fallback = fallbackSvg, ...props }) {
+  return (
+    <img
+      {...props}
+      className={className}
+      src={src || fallback}
+      alt={alt}
+      onError={(event) => {
+        event.currentTarget.onerror = null;
+        event.currentTarget.src = fallback;
+      }}
+    />
+  );
+}
+
 function Header({ onBrochure }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const links = [
@@ -200,7 +232,7 @@ function Hero({ onBrochure, onParticipate, homepage = defaultHomepage }) {
   const content = { ...defaultHomepage, ...homepage };
   return (
     <section id="home" className="relative min-h-[92vh] overflow-hidden pt-14 md:pt-16">
-      <img className="absolute inset-0 h-full w-full object-cover" src={IMAGES.hero} alt="Crowd watching a live talent show stage" />
+      <SafeImage className="absolute inset-0 h-full w-full object-cover" src={IMAGES.hero} alt="Crowd watching a live talent show stage" />
       <div className="absolute inset-0 bg-[#07080d]/72" />
       <div className="absolute inset-0 bg-gradient-to-br from-[#00daf3]/10 via-transparent to-[#ffb59a]/10" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#09090d]/20 to-[#09090d]" />
@@ -251,7 +283,7 @@ function WhoWeAre() {
           <h2 className="mt-4 font-headline text-headline-lg-mobile text-white md:text-headline-lg">A platform built to discover original Indian talent.</h2>
           <p className="mt-5 text-body-lg text-on-surface-variant">ATS brings artists, audiences, brands, and organizers together through live events, digital voting, auditions, finale showcases, and admin-managed talent records.</p>
         </motion.div>
-        <img loading="lazy" className="h-full min-h-72 w-full rounded-lg object-cover" src={IMAGES.who} alt="Performer preparing backstage" />
+        <SafeImage loading="lazy" className="h-full min-h-72 w-full rounded-lg object-cover" src={IMAGES.who} alt="Performer preparing backstage" />
       </div>
     </section>
   );
@@ -304,7 +336,7 @@ function StarAlumni({ participants }) {
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {visible.map((participant) => (
             <article key={participant.id} className="group relative min-h-[360px] overflow-hidden rounded-lg border border-white/10 bg-white/[0.04]">
-              <img className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" src={participant.image || fallbackImage} alt={participant.name} />
+              <SafeImage loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" src={participant.image || fallbackImage} alt={participant.name} />
               <div className="absolute inset-0 bg-gradient-to-t from-[#07070b] via-[#07070b]/70 to-transparent" />
               <div className="absolute inset-x-0 bottom-0 p-6">
                 <span className="rounded border border-secondary-fixed-dim/30 bg-secondary-fixed-dim/15 px-3 py-1 font-label text-[10px] uppercase text-secondary-fixed-dim">{participant.code}</span>
@@ -415,7 +447,7 @@ function PastEvents() {
           {events.map(([title, date, location, highlight, image]) => (
             <article key={title} className="group overflow-hidden rounded-lg border border-white/10 bg-[#12151d] transition hover:-translate-y-2 hover:border-secondary-fixed-dim/40">
               <div className="relative aspect-[4/3] overflow-hidden">
-                <img className="h-full w-full object-cover transition duration-700 group-hover:scale-110" src={image} alt={title} />
+                <SafeImage loading="lazy" className="h-full w-full object-cover transition duration-700 group-hover:scale-110" src={image} alt={title} />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#07070b]/80 to-transparent" />
                 <span className="absolute left-4 top-4 rounded bg-black/45 px-3 py-1 font-label text-[10px] uppercase text-white backdrop-blur">{date}</span>
               </div>
@@ -451,7 +483,7 @@ function Organizers() {
       <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {team.map(([title, copy, image, icon]) => (
           <article key={title} className="group relative min-h-[360px] overflow-hidden rounded-lg border border-white/10 bg-white/[0.04]">
-            <img className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" src={image} alt={`${title} organizer team`} />
+            <SafeImage loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" src={image} alt={`${title} organizer team`} />
             <div className="absolute inset-0 bg-gradient-to-t from-[#07070b] via-[#07070b]/72 to-transparent" />
             <div className="absolute inset-x-0 bottom-0 p-6">
               <div className="mb-4 inline-grid h-12 w-12 place-items-center rounded-lg border border-secondary-fixed-dim/30 bg-secondary-fixed-dim/15 text-secondary-fixed-dim">
