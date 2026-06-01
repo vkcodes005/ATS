@@ -163,7 +163,7 @@ function SafeImage({ src, alt, className = "", fallback = fallbackSvg, ...props 
   );
 }
 
-function Header({ onBrochure }) {
+function Header({ onBrochure, showBrochure = true }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const links = [
     ["Home", "#home"],
@@ -188,10 +188,12 @@ function Header({ onBrochure }) {
           ))}
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={onBrochure} className="hidden items-center gap-2 rounded-lg bg-secondary-fixed-dim px-4 py-2 text-sm font-bold text-[#071013] shadow-[0_8px_24px_rgba(0,218,243,0.18)] transition hover:-translate-y-0.5 hover:bg-white sm:inline-flex">
-            <Icon className="text-lg">download</Icon>
-            <span>Brochure</span>
-          </button>
+          {showBrochure && (
+            <button onClick={onBrochure} className="hidden items-center gap-2 rounded-lg bg-secondary-fixed-dim px-4 py-2 text-sm font-bold text-[#071013] shadow-[0_8px_24px_rgba(0,218,243,0.18)] transition hover:-translate-y-0.5 hover:bg-white sm:inline-flex">
+              <Icon className="text-lg">download</Icon>
+              <span>Brochure</span>
+            </button>
+          )}
           <button onClick={() => setDrawerOpen(true)} className="inline-grid h-9 w-9 place-items-center rounded-lg border border-white/10 text-on-surface-variant transition hover:border-secondary-fixed-dim hover:text-secondary-fixed-dim lg:hidden" aria-label="Open menu">
             <Icon>menu</Icon>
           </button>
@@ -216,10 +218,12 @@ function Header({ onBrochure }) {
                   {label}
                 </a>
               ))}
-              <button onClick={() => { setDrawerOpen(false); onBrochure(); }} className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-secondary-fixed-dim px-4 py-4 font-bold text-[#071013] transition hover:bg-white">
-                <Icon>download</Icon>
-                Brochure
-              </button>
+              {showBrochure && (
+                <button onClick={() => { setDrawerOpen(false); onBrochure(); }} className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-secondary-fixed-dim px-4 py-4 font-bold text-[#071013] transition hover:bg-white">
+                  <Icon>download</Icon>
+                  Brochure
+                </button>
+              )}
             </div>
           </aside>
         </div>
@@ -228,7 +232,7 @@ function Header({ onBrochure }) {
   );
 }
 
-function Hero({ onBrochure, onParticipate, homepage = defaultHomepage }) {
+function Hero({ onBrochure, onParticipate, homepage = defaultHomepage, showBrochure = true }) {
   const content = { ...defaultHomepage, ...homepage };
   return (
     <section id="home" className="relative min-h-[92vh] overflow-hidden pt-14 md:pt-16">
@@ -254,10 +258,12 @@ function Hero({ onBrochure, onParticipate, homepage = defaultHomepage }) {
               <Icon>edit_note</Icon>
               Participate Now
             </button>
-            <button onClick={onBrochure} className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/28 bg-black/25 px-7 py-4 font-bold text-white shadow-[0_14px_38px_rgba(0,0,0,0.22)] backdrop-blur transition hover:-translate-y-1 hover:border-[#00E5FF] hover:text-[#00E5FF]">
-              <Icon>download</Icon>
-              Download Brochure
-            </button>
+            {showBrochure && (
+              <button onClick={onBrochure} className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/28 bg-black/25 px-7 py-4 font-bold text-white shadow-[0_14px_38px_rgba(0,0,0,0.22)] backdrop-blur transition hover:-translate-y-1 hover:border-[#00E5FF] hover:text-[#00E5FF]">
+                <Icon>download</Icon>
+                Download Brochure
+              </button>
+            )}
           </div>
         </div>
         <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -573,9 +579,7 @@ function BrochureModal({ open, onClose }) {
     setStatus("Saving your details...");
     try {
       const result = await api("/api/leads", { method: "POST", body: JSON.stringify(form) });
-      const brochureDownloads = result.brochures?.length
-        ? result.brochures.map((brochure) => ({ ...brochure, url: assetUrl(brochure.url) }))
-        : [{ title: "ATS 2026 Brochure", url: assetUrl(result.brochureUrl) }];
+      const brochureDownloads = (result.brochures || []).map((brochure) => ({ ...brochure, url: assetUrl(brochure.url) }));
       setDownloads(brochureDownloads);
       if (brochureDownloads[0]?.url) {
         const link = document.createElement("a");
@@ -585,7 +589,7 @@ function BrochureModal({ open, onClose }) {
         link.click();
         link.remove();
       }
-      setStatus("Details saved. Download links are available below.");
+      setStatus(brochureDownloads.length ? "Details saved. Download links are available below." : "Details saved. No brochure is available right now.");
     } catch (error) {
       setStatus(error.message);
     }
@@ -860,7 +864,7 @@ class ErrorBoundary extends Component {
 }
 
 function PublicSite() {
-  const [data, setData] = useState({ participants: [], sports: [], events: [] });
+  const [data, setData] = useState({ participants: [], sports: [], events: [], brochures: [] });
   const [brochureOpen, setBrochureOpen] = useState(false);
   const [participantOpen, setParticipantOpen] = useState(false);
   const [bookingEvent, setBookingEvent] = useState(null);
@@ -870,14 +874,16 @@ function PublicSite() {
   }
 
   useEffect(() => {
-    refreshPublicData().catch(() => setData({ participants: [], sports: [], events: [] }));
+    refreshPublicData().catch(() => setData({ participants: [], sports: [], events: [], brochures: [] }));
   }, []);
+
+  const hasBrochures = (data.brochures || []).length > 0;
 
   return (
     <>
-      <Header onBrochure={() => setBrochureOpen(true)} />
+      <Header onBrochure={() => setBrochureOpen(true)} showBrochure={hasBrochures} />
       <main>
-        <Hero onBrochure={() => setBrochureOpen(true)} onParticipate={() => setParticipantOpen(true)} />
+        <Hero onBrochure={() => setBrochureOpen(true)} onParticipate={() => setParticipantOpen(true)} showBrochure={hasBrochures} />
         <WhoWeAre />
         <Stats participants={data.participants} sports={data.sports} />
         <StarAlumni participants={data.participants} />
@@ -906,10 +912,13 @@ function AdminDashboard() {
   const [brochureForm, setBrochureForm] = useState(emptyBrochure);
   const [brochureFile, setBrochureFile] = useState(null);
   const [plannerFilter, setPlannerFilter] = useState("All");
+  const [selectedLeadIds, setSelectedLeadIds] = useState([]);
   const [status, setStatus] = useState("");
 
   async function refresh() {
-    setDb(await api("/api/admin"));
+    const nextDb = await api("/api/admin");
+    setDb(nextDb);
+    setSelectedLeadIds((ids) => ids.filter((id) => nextDb.leads.some((lead) => lead.id === id)));
   }
 
   useEffect(() => {
@@ -1050,8 +1059,52 @@ function AdminDashboard() {
   }
 
   async function removeBrochure(id) {
-    await api(`/api/brochures/${id}`, { method: "DELETE" });
-    await refresh();
+    try {
+      if (!window.confirm("Delete this brochure permanently?")) return;
+      await api(`/api/brochures/${id}`, { method: "DELETE" });
+      setStatus("Brochure deleted successfully.");
+      await refresh();
+    } catch (error) {
+      setStatus(error.message || "Brochure could not be deleted.");
+    }
+  }
+
+  async function deleteLead(id) {
+    try {
+      if (!window.confirm("Delete this brochure lead permanently?")) return;
+      await api(`/api/leads/${id}`, { method: "DELETE" });
+      setStatus("Lead deleted successfully.");
+      await refresh();
+    } catch (error) {
+      setStatus(error.message || "Lead could not be deleted.");
+    }
+  }
+
+  async function deleteSelectedLeads() {
+    try {
+      if (!selectedLeadIds.length) {
+        setStatus("Select at least one lead to delete.");
+        return;
+      }
+      if (!window.confirm(`Delete ${selectedLeadIds.length} selected lead(s) permanently?`)) return;
+      const result = await api("/api/leads/bulk-delete", {
+        method: "POST",
+        body: JSON.stringify({ ids: selectedLeadIds })
+      });
+      setStatus(`${result.deleted || selectedLeadIds.length} lead(s) deleted successfully.`);
+      setSelectedLeadIds([]);
+      await refresh();
+    } catch (error) {
+      setStatus(error.message || "Selected leads could not be deleted.");
+    }
+  }
+
+  function toggleLeadSelection(id) {
+    setSelectedLeadIds((ids) => ids.includes(id) ? ids.filter((leadId) => leadId !== id) : [...ids, id]);
+  }
+
+  function toggleAllLeads(checked) {
+    setSelectedLeadIds(checked ? db.leads.map((lead) => lead.id) : []);
   }
 
   return (
@@ -1170,7 +1223,7 @@ function AdminDashboard() {
                   <p className="font-bold text-white">{brochure.title}</p>
                   <div className="text-sm text-on-surface-variant">
                     <p>{brochure.fileName}</p>
-                    <p>{brochure.active ? "Visible after popup" : "Hidden"}</p>
+                    <p>{brochure.active ? "Visible after popup" : "Hidden"} {brochure.fileAvailable === false ? "| File missing" : ""}</p>
                   </div>
                   <button onClick={() => { setBrochureForm({ id: brochure.id, title: brochure.title, active: brochure.active }); setBrochureFile(null); }} className="rounded border border-white/10 px-3 py-2 text-sm text-on-surface-variant hover:text-white">Edit</button>
                   <button onClick={() => toggleBrochure(brochure)} className="rounded border border-white/10 px-3 py-2 text-sm text-secondary-fixed-dim">{brochure.active ? "Hide" : "Show"}</button>
@@ -1184,13 +1237,33 @@ function AdminDashboard() {
                 <p className="font-bold text-white">Brochure leads</p>
                 <p className="text-sm text-on-surface-variant">These appear after someone submits the brochure popup.</p>
               </div>
-              <button onClick={refresh} className="rounded-lg border border-white/10 px-4 py-2 text-sm font-bold text-secondary-fixed-dim">Refresh Leads</button>
+              <div className="flex flex-wrap gap-2">
+                <button onClick={refresh} className="rounded-lg border border-white/10 px-4 py-2 text-sm font-bold text-secondary-fixed-dim">Refresh Leads</button>
+                <button onClick={deleteSelectedLeads} disabled={!selectedLeadIds.length} className="inline-flex items-center gap-2 rounded-lg border border-red-400/30 px-4 py-2 text-sm font-bold text-red-300 disabled:cursor-not-allowed disabled:opacity-40">
+                  <Icon className="text-base">delete</Icon>
+                  Delete Selected
+                </button>
+              </div>
             </div>
             <div className="mt-3 max-h-96 overflow-auto rounded-lg border border-white/10">
+              {!!db.leads.length && (
+                <label className="flex items-center gap-3 border-b border-white/10 bg-white/[0.03] p-4 text-sm font-bold text-on-surface-variant">
+                  <input type="checkbox" checked={selectedLeadIds.length === db.leads.length} onChange={(event) => toggleAllLeads(event.target.checked)} />
+                  Select all leads
+                </label>
+              )}
               {db.leads.map((lead) => (
-                <div key={lead.id} className="border-b border-white/10 p-4 last:border-b-0">
-                  <p className="font-bold text-white">{lead.name} <span className="text-sm text-tertiary">({lead.interest})</span></p>
-                  <p className="text-sm text-on-surface-variant">{lead.email} | {lead.phone} | {lead.city || "No city"}</p>
+                <div key={lead.id} className="grid gap-3 border-b border-white/10 p-4 last:border-b-0 sm:grid-cols-[auto_1fr_auto] sm:items-center">
+                  <input aria-label={`Select lead ${lead.name}`} type="checkbox" checked={selectedLeadIds.includes(lead.id)} onChange={() => toggleLeadSelection(lead.id)} />
+                  <div>
+                    <p className="font-bold text-white">{lead.name} <span className="text-sm text-tertiary">({lead.interest})</span></p>
+                    <p className="text-sm text-on-surface-variant">{lead.email} | {lead.phone} | {lead.city || "No city"}</p>
+                    {lead.createdAt && <p className="mt-1 text-xs text-on-surface-variant">{new Date(lead.createdAt).toLocaleString()}</p>}
+                  </div>
+                  <button onClick={() => deleteLead(lead.id)} className="inline-flex items-center justify-center gap-2 rounded-lg border border-red-400/30 px-3 py-2 text-sm font-bold text-red-300 transition hover:bg-red-400/10" aria-label={`Delete lead ${lead.name}`}>
+                    <Icon className="text-base">delete</Icon>
+                    Delete
+                  </button>
                 </div>
               ))}
               {!db.leads.length && <p className="p-4 text-on-surface-variant">No brochure leads yet.</p>}
