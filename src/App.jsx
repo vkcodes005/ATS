@@ -18,6 +18,7 @@ const emptyParticipant = { code: "", name: "", profession: "Dancer", active: tru
 const emptySport = { name: "", category: "", active: true };
 const emptyEvent = { title: "", date: "", venue: "", details: "", active: true };
 const emptyBrochure = { id: "", title: "", active: true };
+const maxBrochureSize = 30 * 1024 * 1024;
 const fallbackImage = "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=700&q=85";
 const fallbackServices = [
   ["Talent Registration", "End-to-end participant onboarding for performers, creators, models, and stage artists.", "how_to_reg", "border-secondary-fixed-dim/30"],
@@ -39,6 +40,23 @@ const testimonials = [
 ];
 
 const sponsors = ["MediaOne", "StagePro", "VoteX", "SoundGrid", "StyleHub", "CreatorLab"];
+
+const defaultHomepage = {
+  heroEyebrow: "Season 1 registrations open",
+  heroTitle: "ATS 2026",
+  heroSubtitle: "Artist Talent Show",
+  heroDescription: "A premium national talent-show platform for performers, creators, models, singers, and dancers ready for a real stage, public voting, brand attention, and national recognition.",
+  contactEmail: "hello@ats2026.com",
+  contactPhone: "+91 90000 00000",
+  contactLocation: "India-wide talent events",
+  socialInstagram: "https://instagram.com/",
+  socialYoutube: "https://youtube.com/",
+  socialFacebook: "https://facebook.com/",
+  socialTelegram: "https://t.me/",
+  socialLinkedin: "https://linkedin.com/"
+};
+
+const defaultCategories = ["Dancer", "Singer", "Model", "Influencer", "Public Performer"];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -94,6 +112,15 @@ async function api(path, options = {}) {
   const data = await response.json();
   if (!response.ok) throw new Error(data.error || "Request failed");
   return data;
+}
+
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 }
 
 async function loginAdmin(credentials) {
@@ -169,7 +196,8 @@ function Header({ onBrochure }) {
   );
 }
 
-function Hero({ onBrochure, onParticipate }) {
+function Hero({ onBrochure, onParticipate, homepage = defaultHomepage }) {
+  const content = { ...defaultHomepage, ...homepage };
   return (
     <section id="home" className="relative min-h-[92vh] overflow-hidden pt-14 md:pt-16">
       <img className="absolute inset-0 h-full w-full object-cover" src={IMAGES.hero} alt="Crowd watching a live talent show stage" />
@@ -180,13 +208,13 @@ function Hero({ onBrochure, onParticipate }) {
         <div className="max-w-4xl">
           <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-secondary-fixed-dim/25 bg-secondary-fixed-dim/10 px-4 py-2 font-label text-[11px] font-bold uppercase tracking-[0.18em] text-secondary-fixed-dim">
             <span className="h-2 w-2 rounded-full bg-secondary-fixed-dim" />
-            Season 1 registrations open
+            {content.heroEyebrow}
           </p>
           <h1 className="font-display text-[44px] font-extrabold uppercase leading-[48px] text-white md:text-[72px] md:leading-[78px]">
-            ATS 2026
-            <span className="block text-tertiary">Artist Talent Show</span>
+            {content.heroTitle}
+            <span className="block text-tertiary">{content.heroSubtitle}</span>
           </h1>
-          <p className="mt-6 max-w-2xl text-body-lg text-on-surface-variant">A premium talent-show platform for performers, creators, models, singers, and dancers ready for a real stage, public voting, brand attention, and national recognition.</p>
+          <p className="mt-6 max-w-2xl text-body-lg text-on-surface-variant">{content.heroDescription}</p>
           <div className="mt-9 flex flex-col gap-4 sm:flex-row">
             <button onClick={onParticipate} className="inline-flex items-center justify-center gap-2 rounded-lg bg-tertiary px-7 py-4 font-bold text-[#211006] shadow-[0_16px_40px_rgba(255,181,154,0.22)] transition hover:-translate-y-1 hover:bg-white">
               <Icon>edit_note</Icon>
@@ -223,7 +251,7 @@ function WhoWeAre() {
           <h2 className="mt-4 font-headline text-headline-lg-mobile text-white md:text-headline-lg">A platform built to discover original Indian talent.</h2>
           <p className="mt-5 text-body-lg text-on-surface-variant">ATS brings artists, audiences, brands, and organizers together through live events, digital voting, auditions, finale showcases, and admin-managed talent records.</p>
         </motion.div>
-        <img className="h-full min-h-72 w-full rounded-lg object-cover" src={IMAGES.who} alt="Performer preparing backstage" />
+        <img loading="lazy" className="h-full min-h-72 w-full rounded-lg object-cover" src={IMAGES.who} alt="Performer preparing backstage" />
       </div>
     </section>
   );
@@ -930,48 +958,53 @@ function AdminDashboard() {
     await refresh();
   }
 
-  function readFileAsDataUrl(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
-
   async function saveAdditionalBrochure(submitEvent) {
     submitEvent.preventDefault();
-    if (!brochureForm.id && !brochureFile) {
-      setStatus("Please choose a PDF brochure file.");
-      return;
+    try {
+      if (!brochureForm.id && !brochureFile) {
+        setStatus("Please choose a PDF brochure file.");
+        return;
+      }
+      if (brochureFile && brochureFile.type !== "application/pdf") {
+        setStatus("Please upload a PDF file only.");
+        return;
+      }
+      if (brochureFile && brochureFile.size > maxBrochureSize) {
+        setStatus("PDF is too large. Please upload a file under 30 MB.");
+        return;
+      }
+      setStatus(brochureForm.id ? "Updating brochure..." : "Saving brochure...");
+      const filePayload = brochureFile
+        ? {
+            fileName: brochureFile.name,
+            dataUrl: await readFileAsDataUrl(brochureFile)
+          }
+        : {};
+      const payload = {
+        title: brochureForm.title || brochureFile?.name || "ATS 2026 Brochure",
+        active: brochureForm.active,
+        ...filePayload
+      };
+      if (brochureForm.id) {
+        await api(`/api/brochures/${brochureForm.id}`, {
+          method: "PUT",
+          body: JSON.stringify(payload)
+        });
+        setStatus("Brochure updated successfully.");
+      } else {
+        await api("/api/brochures", {
+          method: "POST",
+          body: JSON.stringify(payload)
+        });
+        setStatus("Brochure saved successfully.");
+      }
+      setBrochureForm(emptyBrochure);
+      setBrochureFile(null);
+      submitEvent.currentTarget.reset();
+      await refresh();
+    } catch (error) {
+      setStatus(error.message || "Brochure could not be saved.");
     }
-    const filePayload = brochureFile
-      ? {
-          fileName: brochureFile.name,
-          dataUrl: await readFileAsDataUrl(brochureFile)
-        }
-      : {};
-    const payload = {
-      title: brochureForm.title,
-      active: brochureForm.active,
-      ...filePayload
-    };
-    if (brochureForm.id) {
-      await api(`/api/brochures/${brochureForm.id}`, {
-        method: "PUT",
-        body: JSON.stringify(payload)
-      });
-      setStatus("Brochure updated.");
-    } else {
-      await api("/api/brochures", {
-        method: "POST",
-        body: JSON.stringify(payload)
-      });
-      setStatus("Brochure saved.");
-    }
-    setBrochureForm(emptyBrochure);
-    setBrochureFile(null);
-    await refresh();
   }
 
   async function toggleBrochure(brochure) {
