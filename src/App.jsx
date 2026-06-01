@@ -244,7 +244,9 @@ function Hero({ onBrochure, onParticipate, homepage = defaultHomepage }) {
           </p>
           <h1 className="font-display text-[44px] font-extrabold uppercase leading-[48px] text-white [text-shadow:0_4px_28px_rgba(0,0,0,0.65)] md:text-[72px] md:leading-[78px]">
             {content.heroTitle}
-            <span className="block text-white">{content.heroSubtitle}</span>
+            <span className="block bg-gradient-to-r from-[#00E5FF] via-[#00B8FF] to-[#2563FF] bg-clip-text text-transparent drop-shadow-[0_4px_24px_rgba(0,184,255,0.28)]">
+              {content.heroSubtitle}
+            </span>
           </h1>
           <p className="mt-6 max-w-2xl text-body-lg font-medium text-white/88 [text-shadow:0_2px_18px_rgba(0,0,0,0.6)]">{content.heroDescription}</p>
           <div className="mt-9 flex flex-col gap-4 sm:flex-row">
