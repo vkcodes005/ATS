@@ -233,26 +233,26 @@ function Hero({ onBrochure, onParticipate, homepage = defaultHomepage }) {
   return (
     <section id="home" className="relative min-h-[92vh] overflow-hidden pt-14 md:pt-16">
       <SafeImage className="absolute inset-0 h-full w-full object-cover" src={IMAGES.hero} alt="Crowd watching a live talent show stage" />
-      <div className="absolute inset-0 bg-[#07080d]/72" />
-      <div className="absolute inset-0 bg-gradient-to-br from-[#00daf3]/10 via-transparent to-[#ffb59a]/10" />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#09090d]/20 to-[#09090d]" />
+      <div className="absolute inset-0 bg-black/60" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#00E5FF]/12 via-[#05070c]/20 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#05070c]/20 via-[#05070c]/35 to-[#09090d]" />
       <motion.div variants={fadeUp} initial="hidden" animate="show" className="relative mx-auto flex min-h-[calc(92vh-3.5rem)] max-w-container-max flex-col justify-center px-margin-mobile py-14 md:min-h-[calc(92vh-4rem)] md:px-margin-desktop">
         <div className="max-w-4xl">
-          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-secondary-fixed-dim/25 bg-secondary-fixed-dim/10 px-4 py-2 font-label text-[11px] font-bold uppercase tracking-[0.18em] text-secondary-fixed-dim">
-            <span className="h-2 w-2 rounded-full bg-secondary-fixed-dim" />
+          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#00E5FF]/35 bg-[#00E5FF]/10 px-4 py-2 font-label text-[11px] font-bold uppercase tracking-[0.18em] text-[#00E5FF] shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
+            <span className="h-2 w-2 rounded-full bg-[#00E5FF]" />
             {content.heroEyebrow}
           </p>
-          <h1 className="font-display text-[44px] font-extrabold uppercase leading-[48px] text-white md:text-[72px] md:leading-[78px]">
+          <h1 className="font-display text-[44px] font-extrabold uppercase leading-[48px] text-white [text-shadow:0_4px_28px_rgba(0,0,0,0.65)] md:text-[72px] md:leading-[78px]">
             {content.heroTitle}
-            <span className="block text-tertiary">{content.heroSubtitle}</span>
+            <span className="block text-white">{content.heroSubtitle}</span>
           </h1>
-          <p className="mt-6 max-w-2xl text-body-lg text-on-surface-variant">{content.heroDescription}</p>
+          <p className="mt-6 max-w-2xl text-body-lg font-medium text-white/88 [text-shadow:0_2px_18px_rgba(0,0,0,0.6)]">{content.heroDescription}</p>
           <div className="mt-9 flex flex-col gap-4 sm:flex-row">
-            <button onClick={onParticipate} className="inline-flex items-center justify-center gap-2 rounded-lg bg-tertiary px-7 py-4 font-bold text-[#211006] shadow-[0_16px_40px_rgba(255,181,154,0.22)] transition hover:-translate-y-1 hover:bg-white">
+            <button onClick={onParticipate} className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#00E5FF] px-7 py-4 font-bold text-[#041014] shadow-[0_16px_40px_rgba(0,229,255,0.22)] transition hover:-translate-y-1 hover:bg-white">
               <Icon>edit_note</Icon>
               Participate Now
             </button>
-            <button onClick={onBrochure} className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/10 px-7 py-4 font-bold text-white transition hover:-translate-y-1 hover:border-secondary-fixed-dim hover:text-secondary-fixed-dim">
+            <button onClick={onBrochure} className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/28 bg-black/25 px-7 py-4 font-bold text-white shadow-[0_14px_38px_rgba(0,0,0,0.22)] backdrop-blur transition hover:-translate-y-1 hover:border-[#00E5FF] hover:text-[#00E5FF]">
               <Icon>download</Icon>
               Download Brochure
             </button>
@@ -260,8 +260,8 @@ function Hero({ onBrochure, onParticipate, homepage = defaultHomepage }) {
         </div>
         <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {impactStats.map(([value, label, icon]) => (
-            <div key={label} className="rounded-lg border border-white/10 bg-[#10131b]/78 p-4 backdrop-blur">
-              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-secondary-fixed-dim/12 text-secondary-fixed-dim">
+            <div key={label} className="rounded-lg border border-white/12 bg-[#080b12]/82 p-4 shadow-[0_18px_50px_rgba(0,0,0,0.22)] backdrop-blur">
+              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-[#00E5FF]/12 text-[#00E5FF]">
                 <Icon>{icon}</Icon>
               </div>
               <p className="font-display text-3xl font-extrabold text-white">{value}</p>
