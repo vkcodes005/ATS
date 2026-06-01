@@ -23,6 +23,29 @@ body {
   font-family: "Hanken Grotesk", sans-serif;
 }
 
+::selection {
+  background: rgba(0, 218, 243, 0.32);
+  color: #ffffff;
+}
+
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+body::-webkit-scrollbar-track {
+  background: #0a0a0f;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: #2c6270;
+  border-radius: 999px;
+  border: 2px solid #0a0a0f;
+}
+
+a, button {
+  -webkit-tap-highlight-color: transparent;
+}
+
 .material-symbols-outlined {
   display: inline-block;
   vertical-align: middle;

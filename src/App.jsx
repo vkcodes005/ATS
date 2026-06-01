@@ -19,6 +19,26 @@ const emptySport = { name: "", category: "", active: true };
 const emptyEvent = { title: "", date: "", venue: "", details: "", active: true };
 const emptyBrochure = { id: "", title: "", active: true };
 const fallbackImage = "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=700&q=85";
+const fallbackServices = [
+  ["Talent Registration", "End-to-end participant onboarding for performers, creators, models, and stage artists.", "how_to_reg", "border-secondary-fixed-dim/30"],
+  ["Live Event Production", "Professional stage planning, audience flow, lighting, sound, and backstage coordination.", "stadium", "border-tertiary/40"],
+  ["Digital Voting", "Audience engagement, voting-led discovery, and measurable campaign momentum.", "how_to_vote", "border-primary/40"]
+];
+
+const impactStats = [
+  ["10K+", "Total Participants", "groups"],
+  ["18+", "Cities", "location_city"],
+  ["25L+", "Prize Pool", "workspace_premium"],
+  ["40+", "Events", "event_available"]
+];
+
+const testimonials = [
+  ["ATS gave our performers a serious stage and a real audience.", "Riya Sharma", "Creative Director"],
+  ["The event flow, voting experience, and media coverage felt premium.", "Arjun Malhotra", "Sponsor Partner"],
+  ["A strong platform for discovering fresh talent across cities.", "Mehak Sinha", "Talent Mentor"]
+];
+
+const sponsors = ["MediaOne", "StagePro", "VoteX", "SoundGrid", "StyleHub", "CreatorLab"];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -95,11 +115,11 @@ function Header({ onBrochure }) {
   ];
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#101016]/88 backdrop-blur-xl">
-      <nav className="mx-auto flex h-16 max-w-container-max items-center justify-between px-margin-mobile md:px-margin-desktop">
-        <a href="/" className="flex items-center gap-3">
-          <span className="grid h-10 w-10 place-items-center rounded-lg border border-secondary-fixed-dim/50 bg-white/5 font-display text-sm font-extrabold text-secondary-fixed-dim">ATS</span>
-          <span className="hidden font-display text-xl font-extrabold text-white sm:inline">ATS 2026</span>
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#0b0d13]/90 backdrop-blur-xl">
+      <nav className="mx-auto flex h-14 max-w-container-max items-center justify-between px-margin-mobile md:h-16 md:px-margin-desktop">
+        <a href="/" className="flex items-center gap-2 md:gap-3">
+          <span className="grid h-8 w-8 place-items-center rounded-lg border border-secondary-fixed-dim/50 bg-white/5 font-display text-xs font-extrabold text-secondary-fixed-dim md:h-10 md:w-10 md:text-sm">ATS</span>
+          <span className="font-display text-lg font-extrabold text-white md:text-xl">ATS 2026</span>
         </a>
         <div className="hidden items-center gap-2 lg:flex">
           {links.map(([label, href]) => (
@@ -109,11 +129,11 @@ function Header({ onBrochure }) {
           ))}
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={onBrochure} className="hidden items-center gap-2 rounded-lg bg-secondary-fixed-dim px-4 py-2 text-sm font-bold text-[#071013] transition hover:bg-white sm:inline-flex">
+          <button onClick={onBrochure} className="hidden items-center gap-2 rounded-lg bg-secondary-fixed-dim px-4 py-2 text-sm font-bold text-[#071013] shadow-[0_8px_24px_rgba(0,218,243,0.18)] transition hover:-translate-y-0.5 hover:bg-white sm:inline-flex">
             <Icon className="text-lg">download</Icon>
             <span>Brochure</span>
           </button>
-          <button onClick={() => setDrawerOpen(true)} className="inline-grid h-10 w-10 place-items-center rounded-lg border border-white/10 text-on-surface-variant transition hover:border-secondary-fixed-dim hover:text-secondary-fixed-dim lg:hidden" aria-label="Open menu">
+          <button onClick={() => setDrawerOpen(true)} className="inline-grid h-9 w-9 place-items-center rounded-lg border border-white/10 text-on-surface-variant transition hover:border-secondary-fixed-dim hover:text-secondary-fixed-dim lg:hidden" aria-label="Open menu">
             <Icon>menu</Icon>
           </button>
         </div>
@@ -151,26 +171,43 @@ function Header({ onBrochure }) {
 
 function Hero({ onBrochure, onParticipate }) {
   return (
-    <section id="home" className="relative min-h-[92vh] overflow-hidden pt-16">
+    <section id="home" className="relative min-h-[92vh] overflow-hidden pt-14 md:pt-16">
       <img className="absolute inset-0 h-full w-full object-cover" src={IMAGES.hero} alt="Crowd watching a live talent show stage" />
-      <div className="absolute inset-0 bg-[#09090d]/65" />
+      <div className="absolute inset-0 bg-[#07080d]/72" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#00daf3]/10 via-transparent to-[#ffb59a]/10" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#09090d]/20 to-[#09090d]" />
-      <motion.div variants={fadeUp} initial="hidden" animate="show" className="relative mx-auto flex min-h-[calc(92vh-4rem)] max-w-5xl flex-col items-center justify-center px-margin-mobile text-center md:px-margin-desktop">
-        <p className="mb-4 font-label text-label-caps uppercase text-secondary-fixed-dim">Season 1</p>
-        <h1 className="font-display text-display-lg-mobile uppercase text-white md:text-[68px] md:leading-[76px] lg:text-display-lg">
-          ATS 2026
-          <span className="mt-3 block text-tertiary">Artist Talent Show</span>
-        </h1>
-        <p className="mt-6 max-w-2xl text-body-lg text-on-surface-variant">A national stage for dancers, singers, models, influencers, and public performers ready to be seen, voted for, and celebrated.</p>
-        <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-          <button onClick={onParticipate} className="inline-flex items-center justify-center gap-2 rounded-lg bg-tertiary px-7 py-4 font-bold text-[#211006] transition hover:bg-white">
-            <Icon>edit_note</Icon>
-            Participate Now
-          </button>
-          <button onClick={onBrochure} className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/25 bg-white/10 px-7 py-4 font-bold text-white transition hover:border-secondary-fixed-dim hover:text-secondary-fixed-dim">
-            <Icon>download</Icon>
-            Download Brochure
-          </button>
+      <motion.div variants={fadeUp} initial="hidden" animate="show" className="relative mx-auto flex min-h-[calc(92vh-3.5rem)] max-w-container-max flex-col justify-center px-margin-mobile py-14 md:min-h-[calc(92vh-4rem)] md:px-margin-desktop">
+        <div className="max-w-4xl">
+          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-secondary-fixed-dim/25 bg-secondary-fixed-dim/10 px-4 py-2 font-label text-[11px] font-bold uppercase tracking-[0.18em] text-secondary-fixed-dim">
+            <span className="h-2 w-2 rounded-full bg-secondary-fixed-dim" />
+            Season 1 registrations open
+          </p>
+          <h1 className="font-display text-[44px] font-extrabold uppercase leading-[48px] text-white md:text-[72px] md:leading-[78px]">
+            ATS 2026
+            <span className="block text-tertiary">Artist Talent Show</span>
+          </h1>
+          <p className="mt-6 max-w-2xl text-body-lg text-on-surface-variant">A premium talent-show platform for performers, creators, models, singers, and dancers ready for a real stage, public voting, brand attention, and national recognition.</p>
+          <div className="mt-9 flex flex-col gap-4 sm:flex-row">
+            <button onClick={onParticipate} className="inline-flex items-center justify-center gap-2 rounded-lg bg-tertiary px-7 py-4 font-bold text-[#211006] shadow-[0_16px_40px_rgba(255,181,154,0.22)] transition hover:-translate-y-1 hover:bg-white">
+              <Icon>edit_note</Icon>
+              Participate Now
+            </button>
+            <button onClick={onBrochure} className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/10 px-7 py-4 font-bold text-white transition hover:-translate-y-1 hover:border-secondary-fixed-dim hover:text-secondary-fixed-dim">
+              <Icon>download</Icon>
+              Download Brochure
+            </button>
+          </div>
+        </div>
+        <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {impactStats.map(([value, label, icon]) => (
+            <div key={label} className="rounded-lg border border-white/10 bg-[#10131b]/78 p-4 backdrop-blur">
+              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-secondary-fixed-dim/12 text-secondary-fixed-dim">
+                <Icon>{icon}</Icon>
+              </div>
+              <p className="font-display text-3xl font-extrabold text-white">{value}</p>
+              <p className="mt-1 text-sm font-semibold text-on-surface-variant">{label}</p>
+            </div>
+          ))}
         </div>
       </motion.div>
     </section>
@@ -194,18 +231,21 @@ function WhoWeAre() {
 
 function Stats({ participants, sports }) {
   const stats = [
-    [sports.length || "25+", "Sports & Events"],
-    [participants.length || "10,000+", "Active Participants"],
-    ["1M+", "Voters"],
-    ["250+", "Artists"]
+    [participants.length || "10K+", "Registered Talent", "person_add"],
+    [sports.length || "40+", "Managed Events", "event_available"],
+    ["18+", "Cities Covered", "location_city"],
+    ["95%", "Audience Engagement", "trending_up"]
   ];
   return (
-    <section id="vote" className="mx-auto max-w-container-max px-margin-mobile py-16 md:px-margin-desktop">
-      <p className="text-center font-label text-label-caps uppercase text-tertiary">Statistics</p>
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map(([value, label]) => (
-          <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} key={label} className="rounded-lg border border-white/10 bg-white/[0.04] p-6 text-center">
-            <p className="font-display text-4xl font-extrabold text-secondary-fixed-dim">{value}</p>
+    <section id="vote" className="mx-auto max-w-container-max px-margin-mobile py-10 md:px-margin-desktop">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {stats.map(([value, label, icon], index) => (
+          <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} transition={{ delay: index * 0.05 }} key={label} className="group rounded-lg border border-white/10 bg-white/[0.04] p-5 transition hover:-translate-y-1 hover:border-secondary-fixed-dim/45 hover:bg-white/[0.07]">
+            <div className="mb-4 flex items-center justify-between">
+              <div className="grid h-11 w-11 place-items-center rounded-lg bg-secondary-fixed-dim/12 text-secondary-fixed-dim"><Icon>{icon}</Icon></div>
+              <span className="font-label text-[10px] uppercase text-tertiary">0{index + 1}</span>
+            </div>
+            <motion.p initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="font-display text-4xl font-extrabold text-white">{value}</motion.p>
             <p className="mt-2 font-semibold text-on-surface-variant">{label}</p>
           </motion.div>
         ))}
@@ -252,19 +292,27 @@ function StarAlumni({ participants }) {
 }
 
 function SportsList({ sports }) {
+  const serviceItems = sports.length
+    ? sports.map((sport, index) => [sport.name, sport.category, ["sports", "emoji_events", "campaign"][index % 3], ["border-secondary-fixed-dim/30", "border-tertiary/40", "border-primary/40"][index % 3]])
+    : fallbackServices;
   return (
     <section id="sports" className="mx-auto max-w-container-max px-margin-mobile py-16 md:px-margin-desktop">
-      <p className="text-center font-label text-label-caps uppercase text-tertiary">Sports Management</p>
-      <h2 className="mx-auto mt-3 max-w-3xl text-center font-headline text-headline-lg-mobile text-white md:text-headline-lg">Live sports and event list controlled from the admin dashboard.</h2>
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {sports.map((sport) => (
-          <div key={sport.id} className="rounded-lg border border-white/10 bg-white/[0.04] p-6">
-            <div className="mb-4 grid h-12 w-12 place-items-center rounded-lg bg-secondary-fixed-dim/15 text-secondary-fixed-dim">
-              <Icon>sports</Icon>
+      <div className="mx-auto max-w-3xl text-center">
+        <p className="font-label text-label-caps uppercase text-tertiary">Services</p>
+        <h2 className="mt-3 font-headline text-headline-lg-mobile text-white md:text-headline-lg">Everything needed to run a polished talent-show experience.</h2>
+      </div>
+      <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {serviceItems.map(([title, copy, icon, border], index) => (
+          <motion.article variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} transition={{ delay: index * 0.05 }} key={title} className={`group rounded-lg border ${border} bg-[#12151d] p-6 shadow-[0_18px_50px_rgba(0,0,0,0.22)] transition hover:-translate-y-2 hover:bg-[#171b25] hover:shadow-[0_24px_70px_rgba(0,218,243,0.10)]`}>
+            <div className="mb-6 flex items-center justify-between">
+              <div className="grid h-14 w-14 place-items-center rounded-lg bg-white/[0.06] text-secondary-fixed-dim transition group-hover:bg-secondary-fixed-dim group-hover:text-[#071013]">
+                <Icon className="text-3xl">{icon}</Icon>
+              </div>
+              <span className="font-label text-[11px] uppercase text-on-surface-variant">0{index + 1}</span>
             </div>
-            <h3 className="font-headline text-2xl text-white">{sport.name}</h3>
-            <p className="mt-2 text-on-surface-variant">{sport.category}</p>
-          </div>
+            <h3 className="font-headline text-2xl text-white">{title}</h3>
+            <p className="mt-3 leading-relaxed text-on-surface-variant">{copy}</p>
+          </motion.article>
         ))}
       </div>
     </section>
@@ -319,14 +367,39 @@ function EventSchedule({ events, onBook }) {
 }
 
 function PastEvents() {
-  const events = [IMAGES.past1, IMAGES.past2, IMAGES.past3, IMAGES.past4];
+  const events = [
+    ["Mumbai Talent Night", "12 Apr 2025", "Mumbai", "1,200+ live attendees", IMAGES.past1],
+    ["Creator Spotlight", "28 Jun 2025", "Delhi", "Digital voting showcase", IMAGES.past2],
+    ["Grand Stage Battle", "09 Sep 2025", "Bengaluru", "Dance and music finals", IMAGES.past3],
+    ["Fashion & Influence", "18 Nov 2025", "Kolkata", "Brand-led runway night", IMAGES.past4]
+  ];
   return (
     <section className="px-margin-mobile py-16 md:px-margin-desktop">
       <div className="mx-auto max-w-container-max">
-        <p className="text-center font-label text-label-caps uppercase text-secondary-fixed-dim">Past Events</p>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {events.map((image, index) => (
-            <img key={image} className="aspect-[4/3] w-full rounded-lg object-cover" src={image} alt={`ATS past event ${index + 1}`} />
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="font-label text-label-caps uppercase text-secondary-fixed-dim">Past Events</p>
+            <h2 className="mt-3 font-headline text-headline-lg-mobile text-white md:text-headline-lg">Highlights from previous ATS experiences.</h2>
+          </div>
+          <p className="max-w-md text-on-surface-variant">Browse moments that shaped our audience, sponsor, and performer community.</p>
+        </div>
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {events.map(([title, date, location, highlight, image]) => (
+            <article key={title} className="group overflow-hidden rounded-lg border border-white/10 bg-[#12151d] transition hover:-translate-y-2 hover:border-secondary-fixed-dim/40">
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <img className="h-full w-full object-cover transition duration-700 group-hover:scale-110" src={image} alt={title} />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#07070b]/80 to-transparent" />
+                <span className="absolute left-4 top-4 rounded bg-black/45 px-3 py-1 font-label text-[10px] uppercase text-white backdrop-blur">{date}</span>
+              </div>
+              <div className="p-5">
+                <p className="font-label text-[11px] uppercase text-tertiary">{location}</p>
+                <h3 className="mt-2 font-headline text-xl text-white">{title}</h3>
+                <p className="mt-2 text-sm text-on-surface-variant">{highlight}</p>
+                <button className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-secondary-fixed-dim transition group-hover:gap-3">
+                  View Highlights <Icon className="text-base">arrow_forward</Icon>
+                </button>
+              </div>
+            </article>
           ))}
         </div>
       </div>
@@ -364,6 +437,59 @@ function Organizers() {
         ))}
       </div>
       <p className="mt-8 text-center text-on-surface-variant">Event Date: Coming Soon</p>
+    </section>
+  );
+}
+
+function TrustSection() {
+  const winners = [
+    ["Anaya Verma", "Season Spotlight Winner", "Singer"],
+    ["Dev Rana", "Audience Choice", "Dancer"],
+    ["Kiara Sen", "Brand Favorite", "Model"]
+  ];
+
+  return (
+    <section className="border-y border-white/10 bg-[#10131b] px-margin-mobile py-16 md:px-margin-desktop">
+      <div className="mx-auto max-w-container-max">
+        <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+          <div>
+            <p className="font-label text-label-caps uppercase text-secondary-fixed-dim">Trust & Credibility</p>
+            <h2 className="mt-3 font-headline text-headline-lg-mobile text-white md:text-headline-lg">Built for performers, partners, and audiences.</h2>
+            <div className="mt-8 grid gap-4">
+              {testimonials.map(([quote, name, role]) => (
+                <blockquote key={name} className="rounded-lg border border-white/10 bg-white/[0.04] p-5">
+                  <p className="text-on-surface-variant">"{quote}"</p>
+                  <footer className="mt-4 text-sm font-bold text-white">{name} <span className="font-normal text-tertiary">/ {role}</span></footer>
+                </blockquote>
+              ))}
+            </div>
+          </div>
+          <div className="grid gap-5">
+            <div className="rounded-lg border border-white/10 bg-white/[0.04] p-5">
+              <p className="font-label text-label-caps uppercase text-tertiary">Sponsors</p>
+              <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-3">
+                {sponsors.map((sponsor) => (
+                  <div key={sponsor} className="grid h-20 place-items-center rounded-lg border border-white/10 bg-[#0b0d13] px-3 text-center font-bold text-on-surface-variant">
+                    {sponsor}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              {winners.map(([name, title, craft]) => (
+                <div key={name} className="rounded-lg border border-white/10 bg-white/[0.04] p-5">
+                  <div className="mb-4 grid h-12 w-12 place-items-center rounded-lg bg-tertiary/15 text-tertiary">
+                    <Icon>workspace_premium</Icon>
+                  </div>
+                  <p className="font-bold text-white">{name}</p>
+                  <p className="mt-1 text-sm text-on-surface-variant">{title}</p>
+                  <p className="mt-3 font-label text-[10px] uppercase text-secondary-fixed-dim">{craft}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }
@@ -587,15 +713,28 @@ function EventBookingModal({ event, onClose }) {
 
 function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-[#0b0b10] px-margin-mobile py-16 md:px-margin-desktop">
+    <footer className="border-t border-white/10 bg-[#08090d] px-margin-mobile py-16 md:px-margin-desktop">
       <div className="mx-auto grid max-w-container-max gap-10 md:grid-cols-2 lg:grid-cols-4">
         <div>
           <h2 className="font-display text-headline-lg-mobile font-extrabold text-white">ATS 2026</h2>
           <p className="mt-6 max-w-xs text-body-lg text-on-surface-variant">The world's most innovative talent platform, discovering the next generation of global stars.</p>
-          <div className="mt-6 flex gap-4 text-secondary-fixed-dim"><Icon>public</Icon><Icon>podcasts</Icon><Icon>movie</Icon></div>
+          <div className="mt-6 flex gap-3 text-secondary-fixed-dim">
+            {["public", "podcasts", "movie"].map((icon) => (
+              <a key={icon} href="#home" className="grid h-10 w-10 place-items-center rounded-lg border border-white/10 bg-white/[0.04] transition hover:border-secondary-fixed-dim hover:bg-secondary-fixed-dim hover:text-[#071013]">
+                <Icon>{icon}</Icon>
+              </a>
+            ))}
+          </div>
         </div>
-        <FooterLinks title="Explore" items={["Terms of Service", "Privacy Policy", "FAQ"]} />
-        <FooterLinks title="Participate" items={["Apply Now", "Sponsorships", "Press Kit"]} />
+        <FooterLinks title="Quick Links" items={["Home", "Artists", "Sports", "Events", "Team"]} />
+        <div>
+          <h3 className="font-label text-label-caps uppercase text-tertiary">Contact</h3>
+          <div className="mt-7 space-y-4 text-on-surface-variant">
+            <p className="flex gap-3"><Icon className="text-secondary-fixed-dim">mail</Icon> hello@ats2026.com</p>
+            <p className="flex gap-3"><Icon className="text-secondary-fixed-dim">call</Icon> +91 90000 00000</p>
+            <p className="flex gap-3"><Icon className="text-secondary-fixed-dim">location_on</Icon> India-wide talent events</p>
+          </div>
+        </div>
         <div>
           <h3 className="font-label text-label-caps uppercase text-tertiary">Newsletter</h3>
           <p className="mt-7 text-on-surface-variant">Stay updated with the latest show results.</p>
@@ -605,7 +744,14 @@ function Footer() {
           </div>
         </div>
       </div>
-      <p className="mx-auto mt-16 max-w-container-max border-t border-white/10 pt-8 text-on-surface-variant">Copyright 2026 Artist Talent Show Season 1. Produced by Global Media Group.</p>
+      <div className="mx-auto mt-16 flex max-w-container-max flex-col gap-3 border-t border-white/10 pt-8 text-sm text-on-surface-variant md:flex-row md:items-center md:justify-between">
+        <p>Copyright 2026 Artist Talent Show Season 1. Produced by Global Media Group.</p>
+        <div className="flex gap-4">
+          <a href="#home" className="hover:text-secondary-fixed-dim">Privacy</a>
+          <a href="#home" className="hover:text-secondary-fixed-dim">Terms</a>
+          <a href="#home" className="hover:text-secondary-fixed-dim">Support</a>
+        </div>
+      </div>
     </footer>
   );
 }
@@ -615,7 +761,7 @@ function FooterLinks({ title, items }) {
     <div>
       <h3 className="font-label text-label-caps uppercase text-tertiary">{title}</h3>
       <div className="mt-7 space-y-4">
-        {items.map((item) => <a key={item} href="#home" className="block text-body-lg text-on-surface-variant transition hover:text-secondary-fixed-dim">{item}</a>)}
+        {items.map((item) => <a key={item} href={`#${item.toLowerCase() === "home" ? "home" : item.toLowerCase()}`} className="block text-body-lg text-on-surface-variant transition hover:text-secondary-fixed-dim">{item}</a>)}
       </div>
     </div>
   );
@@ -678,6 +824,7 @@ function PublicSite() {
         <Participate onParticipate={() => setParticipantOpen(true)} />
         <PastEvents />
         <Organizers />
+        <TrustSection />
       </main>
       <Footer />
       <BrochureModal open={brochureOpen} onClose={() => setBrochureOpen(false)} />
