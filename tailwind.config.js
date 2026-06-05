@@ -4,8 +4,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "#131318",
-        surface: "#15121c",
+        background: "#050816",
+        surface: "#101828",
         "surface-container-lowest": "#0f0d17",
         "surface-container-low": "#1d1a25",
         "surface-container": "#211e29",
@@ -16,16 +16,16 @@ export default {
         "on-surface-variant": "#cbc3d9",
         outline: "#948da2",
         "outline-variant": "#494456",
-        primary: "#d2bbff",
+        primary: "#00D4FF",
         "on-primary": "#38255e",
         "primary-container": "#5d4984",
         "on-primary-container": "#d4bdff",
-        secondary: "#cfbdff",
+        secondary: "#00D4FF",
         "secondary-container": "#513697",
         "on-secondary-container": "#c2acff",
         "secondary-fixed": "#e8ddff",
-        "secondary-fixed-dim": "#00daf3",
-        tertiary: "#ffb59a",
+        "secondary-fixed-dim": "#00D4FF",
+        tertiary: "#FF8A65",
         "tertiary-container": "#963200",
         "on-tertiary-container": "#ffb79d",
         error: "#ffb4ab",
@@ -34,9 +34,9 @@ export default {
         "gold-glow": "#FFD700"
       },
       fontFamily: {
-        display: ["Sora", "sans-serif"],
-        headline: ["Sora", "sans-serif"],
-        body: ["Hanken Grotesk", "sans-serif"],
+        display: ["Poppins", "sans-serif"],
+        headline: ["Poppins", "sans-serif"],
+        body: ["Inter", "sans-serif"],
         label: ["JetBrains Mono", "monospace"]
       },
       fontSize: {

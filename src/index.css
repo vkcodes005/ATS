@@ -15,12 +15,11 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   background:
-    radial-gradient(circle at 18% 12%, rgba(98, 0, 238, 0.17), transparent 34rem),
-    radial-gradient(circle at 84% 18%, rgba(0, 227, 253, 0.12), transparent 31rem),
-    radial-gradient(circle at 50% 100%, rgba(255, 177, 195, 0.08), transparent 37rem),
-    #0a0a0f;
+    radial-gradient(circle at 18% 12%, rgba(0, 212, 255, 0.13), transparent 34rem),
+    radial-gradient(circle at 84% 18%, rgba(255, 138, 101, 0.11), transparent 31rem),
+    #050816;
   color: #e7e0f0;
-  font-family: "Hanken Grotesk", sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 ::selection {
@@ -77,7 +76,7 @@ a, button {
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(45deg, #cfbdff, #00e3fd, #ffb1c3);
+  background: linear-gradient(45deg, #00d4ff, #ff8a65, #ffffff);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;

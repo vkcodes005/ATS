@@ -19,6 +19,8 @@ const emptySport = { name: "", category: "", active: true };
 const emptyEvent = { title: "", date: "", venue: "", details: "", active: true };
 const emptyBrochure = { id: "", title: "", active: true };
 const maxBrochureSize = 30 * 1024 * 1024;
+const maxPortfolioPhotoSize = 8 * 1024 * 1024;
+const maxTalentVideoSize = 75 * 1024 * 1024;
 const fallbackImage = "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=700&q=85";
 const fallbackSvg = `data:image/svg+xml,${encodeURIComponent(`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 700">
@@ -50,30 +52,70 @@ const impactStats = [
   ["40+", "Events", "event_available"]
 ];
 
+const talentCategories = ["Singer", "Dancer", "Model", "Actor", "Creator", "Writer", "Mr & Miss Cute", "Open Talent"];
+
 const testimonials = [
-  ["ATS gave our performers a serious stage and a real audience.", "Riya Sharma", "Creative Director"],
-  ["The event flow, voting experience, and media coverage felt premium.", "Arjun Malhotra", "Sponsor Partner"],
-  ["A strong platform for discovering fresh talent across cities.", "Mehak Sinha", "Talent Mentor"]
+  ["Official testimonial pending approval.", "Surya Prakash", "Founder, Legit Global"],
+  ["Official testimonial pending approval.", "Ankit Nagar", "Co-Founder, Legit Global"],
+  ["Official testimonial pending approval.", "Vishal Gupta", "Founder, Viztechie Private Limited"]
 ];
 
-const sponsors = ["MediaOne", "StagePro", "VoteX", "SoundGrid", "StyleHub", "CreatorLab"];
+const sponsors = ["Sponsors", "Partners", "Media Partners", "Supporting Organizations"];
 
 const defaultHomepage = {
   heroEyebrow: "Season 1 registrations open",
-  heroTitle: "ATS 2026",
+  heroTitle: "Artist Talent Show",
   heroSubtitle: "Artist Talent Show",
-  heroDescription: "A premium national talent-show platform for performers, creators, models, singers, and dancers ready for a real stage, public voting, brand attention, and national recognition.",
-  contactEmail: "hello@ats2026.com",
-  contactPhone: "+91 90000 00000",
-  contactLocation: "India-wide talent events",
-  socialInstagram: "https://instagram.com/",
-  socialYoutube: "https://youtube.com/",
-  socialFacebook: "https://facebook.com/",
+  heroDescription: "Alpha Wings Tech Group presents a premium event platform for singers, dancers, models, actors, creators, writers, kids talent, and open talent performers ready for a professional stage.",
+  contactEmail: "Events@alphabusi.com",
+  contactPhone: "+91-79830 32984",
+  contactLocation: "3rd Floor, Orchid Centre, Rapid Metro Station, Sector 53, Gurugram, Haryana 122002",
+  socialInstagram: "https://www.instagram.com/atsshow.official/",
+  socialYoutube: "https://www.youtube.com/@ArtistTalentShow",
+  socialFacebook: "https://www.facebook.com/profile.php?id=61590326891434",
   socialTelegram: "https://t.me/",
   socialLinkedin: "https://linkedin.com/"
 };
 
-const defaultCategories = ["Dancer", "Singer", "Model", "Influencer", "Public Performer"];
+const defaultCategories = talentCategories;
+
+const defaultEvents = [
+  {
+    id: "artist-talent-show-season-1",
+    title: "Artist Talent Show Season 1",
+    date: "Coming Soon",
+    venue: "City to be announced",
+    details: "A flagship ATS stage for singers, dancers, models, actors, creators, writers, kids talent, and open talent performers."
+  },
+  {
+    id: "meerut-runway-fashion-week-season-2",
+    title: "Meerut Runway Fashion Week Season 2",
+    date: "Coming Soon",
+    venue: "Meerut",
+    details: "Fashion, runway, and talent showcase managed by the ATS event team."
+  },
+  {
+    id: "grand-runway-night-season-1",
+    title: "Grand Runway Night Season 1",
+    date: "Coming Soon",
+    venue: "City to be announced",
+    details: "Premium runway night featuring models, designers, artists, and event partners."
+  },
+  {
+    id: "meerut-slow-championship-season-3",
+    title: "Meerut Slow Championship Season 3",
+    date: "Coming Soon",
+    venue: "Meerut",
+    details: "Community event experience managed under the ATS event portfolio."
+  },
+  {
+    id: "girfw-season-8",
+    title: "GIRFW Season 8",
+    date: "Coming Soon",
+    venue: "City to be announced",
+    details: "Established runway and fashion event managed with production, coordination, and partner support."
+  }
+];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -163,7 +205,7 @@ function SafeImage({ src, alt, className = "", fallback = fallbackSvg, ...props 
   );
 }
 
-function Header({ onBrochure, showBrochure = true }) {
+function Header({ onBrochure, onViewBrochure, showBrochure = true }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const links = [
     ["Home", "#home"],
@@ -189,8 +231,8 @@ function Header({ onBrochure, showBrochure = true }) {
         </div>
         <div className="flex items-center gap-3">
           {showBrochure && (
-            <button onClick={onBrochure} className="hidden items-center gap-2 rounded-lg bg-secondary-fixed-dim px-4 py-2 text-sm font-bold text-[#071013] shadow-[0_8px_24px_rgba(0,218,243,0.18)] transition hover:-translate-y-0.5 hover:bg-white sm:inline-flex">
-              <Icon className="text-lg">download</Icon>
+            <button onClick={onViewBrochure} className="hidden items-center gap-2 rounded-lg bg-secondary-fixed-dim px-4 py-2 text-sm font-bold text-[#071013] shadow-[0_8px_24px_rgba(0,218,243,0.18)] transition hover:-translate-y-0.5 hover:bg-white sm:inline-flex">
+              <Icon className="text-lg">visibility</Icon>
               <span>Brochure</span>
             </button>
           )}
@@ -219,9 +261,9 @@ function Header({ onBrochure, showBrochure = true }) {
                 </a>
               ))}
               {showBrochure && (
-                <button onClick={() => { setDrawerOpen(false); onBrochure(); }} className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-secondary-fixed-dim px-4 py-4 font-bold text-[#071013] transition hover:bg-white">
-                  <Icon>download</Icon>
-                  Brochure
+                <button onClick={() => { setDrawerOpen(false); onViewBrochure(); }} className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-secondary-fixed-dim px-4 py-4 font-bold text-[#071013] transition hover:bg-white">
+                  <Icon>visibility</Icon>
+                  View Brochure
                 </button>
               )}
             </div>
@@ -232,7 +274,7 @@ function Header({ onBrochure, showBrochure = true }) {
   );
 }
 
-function Hero({ onBrochure, onParticipate, homepage = defaultHomepage, showBrochure = true }) {
+function Hero({ onBrochure, onViewBrochure, onParticipate, homepage = defaultHomepage, showBrochure = true }) {
   const content = { ...defaultHomepage, ...homepage };
   return (
     <section id="home" className="relative min-h-[92vh] overflow-hidden pt-14 md:pt-16">
@@ -258,6 +300,12 @@ function Hero({ onBrochure, onParticipate, homepage = defaultHomepage, showBroch
               <Icon>edit_note</Icon>
               Participate Now
             </button>
+            {showBrochure && (
+              <button onClick={onViewBrochure} className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/28 bg-black/25 px-7 py-4 font-bold text-white shadow-[0_14px_38px_rgba(0,0,0,0.22)] backdrop-blur transition hover:-translate-y-1 hover:border-[#00E5FF] hover:text-[#00E5FF]">
+                <Icon>visibility</Icon>
+                View Brochure
+              </button>
+            )}
             {showBrochure && (
               <button onClick={onBrochure} className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/28 bg-black/25 px-7 py-4 font-bold text-white shadow-[0_14px_38px_rgba(0,0,0,0.22)] backdrop-blur transition hover:-translate-y-1 hover:border-[#00E5FF] hover:text-[#00E5FF]">
                 <Icon>download</Icon>
@@ -288,10 +336,55 @@ function WhoWeAre() {
       <div className="mx-auto grid max-w-container-max gap-10 px-margin-mobile py-20 md:px-margin-desktop lg:grid-cols-2">
         <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}>
           <p className="font-label text-label-caps uppercase text-secondary-fixed-dim">Who We Are</p>
-          <h2 className="mt-4 font-headline text-headline-lg-mobile text-white md:text-headline-lg">A platform built to discover original Indian talent.</h2>
-          <p className="mt-5 text-body-lg text-on-surface-variant">ATS brings artists, audiences, brands, and organizers together through live events, digital voting, auditions, finale showcases, and admin-managed talent records.</p>
+          <h2 className="mt-4 font-headline text-headline-lg-mobile text-white md:text-headline-lg">Alpha Wings Tech Group creates stages for original Indian talent.</h2>
+          <p className="mt-5 text-body-lg text-on-surface-variant">ATS brings artists, audiences, brands, organizers, sponsors, media partners, and supporting organizations together through live events, auditions, production planning, and event management.</p>
         </motion.div>
         <SafeImage loading="lazy" className="h-full min-h-72 w-full rounded-lg object-cover" src={IMAGES.who} alt="Performer preparing backstage" />
+      </div>
+    </section>
+  );
+}
+
+function Essentials() {
+  const cards = [
+    ["Mission", "Build a trusted event platform where emerging talent gets a professional stage, organized registration, audience reach, and partner visibility.", "flag"],
+    ["Vision", "Make ATS a premium event-industry brand for talent discovery, fashion, performance, creator showcases, and managed live experiences.", "visibility"],
+    ["Why Join ATS", "Participants can register across multiple talent categories, present their profile, connect with event teams, and become part of future ATS showcases.", "workspace_premium"],
+    ["Venue", "3rd Floor, Orchid Centre, Rapid Metro Station, Near IILM Institute, Sector 53, Gurugram, Haryana 122002, India.", "location_on"]
+  ];
+  const faqs = [
+    ["How to register?", "Use the Participate Now form and submit your basic details."],
+    ["What is the age limit?", "Participants should be between 5 and 35 years old."],
+    ["Which categories are available?", talentCategories.join(", ")],
+    ["How do I contact support?", "Call or WhatsApp +91-79830 32984, or email Events@alphabusi.com."]
+  ];
+
+  return (
+    <section className="mx-auto max-w-container-max px-margin-mobile py-16 md:px-margin-desktop">
+      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        {cards.map(([title, copy, icon]) => (
+          <article key={title} className="rounded-lg border border-white/10 bg-[#101828] p-6">
+            <div className="mb-5 grid h-12 w-12 place-items-center rounded-lg bg-secondary-fixed-dim/12 text-secondary-fixed-dim">
+              <Icon>{icon}</Icon>
+            </div>
+            <h3 className="font-headline text-2xl text-white">{title}</h3>
+            <p className="mt-3 leading-relaxed text-on-surface-variant">{copy}</p>
+          </article>
+        ))}
+      </div>
+      <div className="mt-10 grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
+        <div>
+          <p className="font-label text-label-caps uppercase text-tertiary">FAQ</p>
+          <h2 className="mt-3 font-headline text-headline-lg-mobile text-white md:text-headline-lg">Quick answers for participants.</h2>
+        </div>
+        <div className="grid gap-3">
+          {faqs.map(([question, answer]) => (
+            <article key={question} className="rounded-lg border border-white/10 bg-white/[0.04] p-5">
+              <h3 className="font-bold text-white">{question}</h3>
+              <p className="mt-2 text-on-surface-variant">{answer}</p>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -406,13 +499,14 @@ function Participate({ onParticipate }) {
 }
 
 function EventSchedule({ events, onBook }) {
+  const visibleEvents = events.length ? events : defaultEvents;
   return (
     <section id="events" className="border-y border-white/10 bg-[#101016] px-margin-mobile py-16 md:px-margin-desktop">
       <div className="mx-auto max-w-container-max">
         <p className="text-center font-label text-label-caps uppercase text-secondary-fixed-dim">Event Dates</p>
         <h2 className="mx-auto mt-3 max-w-3xl text-center font-headline text-headline-lg-mobile text-white md:text-headline-lg">Book your spot for upcoming ATS events.</h2>
         <div className="mt-8 grid gap-5 lg:grid-cols-2">
-          {events.map((event) => (
+          {visibleEvents.map((event) => (
             <article key={event.id} className="rounded-lg border border-white/10 bg-white/[0.04] p-6">
               <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
                 <div>
@@ -427,7 +521,6 @@ function EventSchedule({ events, onBook }) {
               </div>
             </article>
           ))}
-          {!events.length && <p className="rounded-lg border border-white/10 bg-white/[0.04] p-6 text-center text-on-surface-variant lg:col-span-2">No active events yet.</p>}
         </div>
       </div>
     </section>
@@ -436,10 +529,10 @@ function EventSchedule({ events, onBook }) {
 
 function PastEvents() {
   const events = [
-    ["Mumbai Talent Night", "12 Apr 2025", "Mumbai", "1,200+ live attendees", IMAGES.past1],
-    ["Creator Spotlight", "28 Jun 2025", "Delhi", "Digital voting showcase", IMAGES.past2],
-    ["Grand Stage Battle", "09 Sep 2025", "Bengaluru", "Dance and music finals", IMAGES.past3],
-    ["Fashion & Influence", "18 Nov 2025", "Kolkata", "Brand-led runway night", IMAGES.past4]
+    ["Artist Talent Show Season 1", "ATS Event", "City to be announced", "Singer, dancer, model, actor, creator, writer, and open talent showcase.", IMAGES.past1],
+    ["Meerut Runway Fashion Week Season 2", "Managed Event", "Meerut", "Runway and fashion event from the ATS managed-events portfolio.", IMAGES.past2],
+    ["Grand Runway Night Season 1", "Managed Event", "City to be announced", "Premium runway night with event production and partner coordination.", IMAGES.past3],
+    ["GIRFW Season 8", "Managed Event", "City to be announced", "Fashion event experience supported by ATS event planning.", IMAGES.past4]
   ];
   return (
     <section className="px-margin-mobile py-16 md:px-margin-desktop">
@@ -477,10 +570,18 @@ function PastEvents() {
 
 function Organizers() {
   const team = [
-    ["Event Direction", "Planning, show flow, venue coordination", IMAGES.organizer1, "event"],
-    ["Stage Production", "Lights, sound, backstage and live crew", IMAGES.organizer2, "settings"],
-    ["Artist Management", "Auditions, mentors, rehearsals and talent care", IMAGES.organizer3, "groups"],
-    ["Media & Sponsors", "Brand partners, press, content and voting reach", IMAGES.organizer4, "campaign"]
+    ["Akshay Kumar", "Organizer", "event"],
+    ["Gopal Saini", "Show Director", "campaign"],
+    ["Ankit Saini", "Show Producer", "movie"],
+    ["Ashish Chauhan", "Show Producer", "movie"],
+    ["Rajnish Kumar", "Core Team", "groups"],
+    ["Shivam Kumar", "Core Team", "groups"],
+    ["Robin Panchal", "Core Team", "groups"],
+    ["Surya Prakash", "Core Team", "groups"],
+    ["Vikas Kashyap", "Core Team", "groups"],
+    ["Anuj Soam", "Core Team", "groups"],
+    ["Vishnat Chauhan", "Core Team", "groups"],
+    ["Volunteer Team", "Remaining Team Members", "volunteer_activism"]
   ];
   return (
     <section id="team" className="mx-auto max-w-container-max px-margin-mobile py-16 md:px-margin-desktop">
@@ -488,19 +589,14 @@ function Organizers() {
         <p className="font-label text-label-caps uppercase text-secondary-fixed-dim">Organized By</p>
         <h2 className="mt-3 font-headline text-headline-lg-mobile text-white md:text-headline-lg">The teams behind ATS 2026 Season 1.</h2>
       </div>
-      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {team.map(([title, copy, image, icon]) => (
-          <article key={title} className="group relative min-h-[360px] overflow-hidden rounded-lg border border-white/10 bg-white/[0.04]">
-            <SafeImage loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" src={image} alt={`${title} organizer team`} />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#07070b] via-[#07070b]/72 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 p-6">
-              <div className="mb-4 inline-grid h-12 w-12 place-items-center rounded-lg border border-secondary-fixed-dim/30 bg-secondary-fixed-dim/15 text-secondary-fixed-dim">
-                <Icon>{icon}</Icon>
-              </div>
-              <p className="mb-2 font-label text-[11px] font-semibold uppercase tracking-[0.18em] text-tertiary">ATS Core Team</p>
-              <h3 className="font-headline text-2xl text-white">{title}</h3>
-              <p className="mt-3 leading-relaxed text-on-surface-variant">{copy}</p>
+      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {team.map(([name, role, icon]) => (
+          <article key={name} className="rounded-lg border border-white/10 bg-white/[0.04] p-5">
+            <div className="mb-4 grid h-14 w-14 place-items-center rounded-lg border border-secondary-fixed-dim/30 bg-secondary-fixed-dim/15 text-secondary-fixed-dim">
+              <Icon>{icon}</Icon>
             </div>
+            <p className="font-headline text-xl text-white">{name}</p>
+            <p className="mt-2 text-sm font-semibold text-tertiary">{role}</p>
           </article>
         ))}
       </div>
@@ -510,10 +606,10 @@ function Organizers() {
 }
 
 function TrustSection() {
-  const winners = [
-    ["Anaya Verma", "Season Spotlight Winner", "Singer"],
-    ["Dev Rana", "Audience Choice", "Dancer"],
-    ["Kiara Sen", "Brand Favorite", "Model"]
+  const recognition = [
+    ["Past Work", "Use ATS brochure content and admin uploads for verified work."],
+    ["Awards & Recognition", "Verified awards will be published after brochure review."],
+    ["Sponsors & Partners", "Logos and names will come from the official ATS brochure."]
   ];
 
   return (
@@ -544,14 +640,13 @@ function TrustSection() {
               </div>
             </div>
             <div className="grid gap-4 md:grid-cols-3">
-              {winners.map(([name, title, craft]) => (
-                <div key={name} className="rounded-lg border border-white/10 bg-white/[0.04] p-5">
+              {recognition.map(([title, copy]) => (
+                <div key={title} className="rounded-lg border border-white/10 bg-white/[0.04] p-5">
                   <div className="mb-4 grid h-12 w-12 place-items-center rounded-lg bg-tertiary/15 text-tertiary">
                     <Icon>workspace_premium</Icon>
                   </div>
-                  <p className="font-bold text-white">{name}</p>
-                  <p className="mt-1 text-sm text-on-surface-variant">{title}</p>
-                  <p className="mt-3 font-label text-[10px] uppercase text-secondary-fixed-dim">{craft}</p>
+                  <p className="font-bold text-white">{title}</p>
+                  <p className="mt-2 text-sm text-on-surface-variant">{copy}</p>
                 </div>
               ))}
             </div>
@@ -644,10 +739,14 @@ function ParticipantModal({ open, onClose, onCreated }) {
     phone: "",
     email: "",
     city: "",
+    age: "",
+    instagram: "",
     profession: "Dancer",
     image: "",
-    active: true
+    active: false
   });
+  const [photoFile, setPhotoFile] = useState(null);
+  const [videoFile, setVideoFile] = useState(null);
   const [status, setStatus] = useState("");
 
   if (!open) return null;
@@ -659,6 +758,27 @@ function ParticipantModal({ open, onClose, onCreated }) {
 
   async function submitParticipant(event) {
     event.preventDefault();
+    const age = Number(form.age);
+    if (age < 5 || age > 35) {
+      setStatus("Age must be between 5 and 35.");
+      return;
+    }
+    if (!photoFile) {
+      setStatus("Please upload at least one portfolio photo.");
+      return;
+    }
+    if (!videoFile) {
+      setStatus("Please upload your 1 minute talent video.");
+      return;
+    }
+    if (photoFile.size > maxPortfolioPhotoSize) {
+      setStatus("Portfolio photo must be under 8 MB.");
+      return;
+    }
+    if (videoFile.size > maxTalentVideoSize) {
+      setStatus("Talent video must be under 75 MB.");
+      return;
+    }
     setStatus("Submitting your registration...");
     try {
       await api("/api/participants", {
@@ -667,17 +787,31 @@ function ParticipantModal({ open, onClose, onCreated }) {
           code: codeFor(form.profession),
           name: form.name,
           profession: form.profession,
-          image: form.image || fallbackImage,
-          active: form.active,
+          image: form.image,
+          active: false,
+          status: "Pending",
+          age,
+          instagram: form.instagram,
           phone: form.phone,
           email: form.email,
-          city: form.city
+          city: form.city,
+          photoFile: {
+            fileName: photoFile.name,
+            dataUrl: await readFileAsDataUrl(photoFile)
+          },
+          videoFile: {
+            fileName: videoFile.name,
+            dataUrl: await readFileAsDataUrl(videoFile)
+          }
         })
       });
-      setStatus("Registration saved. You will now appear in the admin dashboard.");
-      setForm({ name: "", phone: "", email: "", city: "", profession: "Dancer", image: "", active: true });
+      setStatus("Registration saved. Admin approval is pending.");
+      setForm({ name: "", phone: "", email: "", city: "", age: "", instagram: "", profession: "Dancer", image: "", active: false });
+      setPhotoFile(null);
+      setVideoFile(null);
+      event.currentTarget.reset();
       await onCreated();
-      setTimeout(onClose, 900);
+      setTimeout(onClose, 1200);
     } catch (error) {
       setStatus(error.message);
     }
@@ -700,23 +834,25 @@ function ParticipantModal({ open, onClose, onCreated }) {
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           <input required placeholder="Full name" value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} className="rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none focus:border-secondary-fixed-dim" />
           <select value={form.profession} onChange={(event) => setForm({ ...form, profession: event.target.value })} className="rounded-lg border border-white/10 bg-[#201d29] px-4 py-3 text-white outline-none focus:border-secondary-fixed-dim">
-            <option>Dancer</option>
-            <option>Singer</option>
-            <option>Model</option>
-            <option>Influencer</option>
-            <option>Public Performer</option>
+            {talentCategories.map((category) => <option key={category}>{category}</option>)}
           </select>
           <input required placeholder="Phone number" value={form.phone} onChange={(event) => setForm({ ...form, phone: event.target.value })} className="rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none focus:border-secondary-fixed-dim" />
           <input required type="email" placeholder="Email address" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} className="rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none focus:border-secondary-fixed-dim" />
+          <input required min="5" max="35" type="number" placeholder="Age (5-35)" value={form.age} onChange={(event) => setForm({ ...form, age: event.target.value })} className="rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none focus:border-secondary-fixed-dim" />
+          <input required placeholder="Instagram ID" value={form.instagram} onChange={(event) => setForm({ ...form, instagram: event.target.value })} className="rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none focus:border-secondary-fixed-dim" />
           <input placeholder="City" value={form.city} onChange={(event) => setForm({ ...form, city: event.target.value })} className="rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none focus:border-secondary-fixed-dim" />
-          <input placeholder="Profile image URL" value={form.image} onChange={(event) => setForm({ ...form, image: event.target.value })} className="rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none focus:border-secondary-fixed-dim" />
-          <label className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3 text-on-surface-variant sm:col-span-2">
-            <input type="checkbox" checked={form.active} onChange={(event) => setForm({ ...form, active: event.target.checked })} />
-            Show this participant in Star Alumni Bank after submission
+          <input placeholder="Optional profile image URL" value={form.image} onChange={(event) => setForm({ ...form, image: event.target.value })} className="rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none focus:border-secondary-fixed-dim" />
+          <label className="rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3 text-on-surface-variant">
+            <span className="mb-2 block text-sm font-bold text-white">Portfolio photo</span>
+            <input required type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => setPhotoFile(event.target.files?.[0] || null)} className="w-full text-sm" />
+          </label>
+          <label className="rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3 text-on-surface-variant">
+            <span className="mb-2 block text-sm font-bold text-white">1 minute talent video</span>
+            <input required type="file" accept="video/mp4,video/webm,video/quicktime" onChange={(event) => setVideoFile(event.target.files?.[0] || null)} className="w-full text-sm" />
           </label>
         </div>
 
-        <button className="mt-6 w-full rounded-lg bg-secondary-fixed-dim px-6 py-4 font-bold text-[#071013] hover:bg-white">Submit Participant Form</button>
+        <button className="mt-6 w-full rounded-lg bg-secondary-fixed-dim px-6 py-4 font-bold text-[#071013] hover:bg-white">Submit for Admin Approval</button>
         {status && <p className="mt-4 text-center text-sm text-on-surface-variant">{status}</p>}
       </form>
     </div>
@@ -777,16 +913,20 @@ function EventBookingModal({ event, onClose }) {
   );
 }
 
-function Footer() {
+function Footer({ brochureUrl = "", onBrochure }) {
   return (
     <footer className="border-t border-white/10 bg-[#08090d] px-margin-mobile py-16 md:px-margin-desktop">
       <div className="mx-auto grid max-w-container-max gap-10 md:grid-cols-2 lg:grid-cols-4">
         <div>
           <h2 className="font-display text-headline-lg-mobile font-extrabold text-white">ATS 2026</h2>
-          <p className="mt-6 max-w-xs text-body-lg text-on-surface-variant">The world's most innovative talent platform, discovering the next generation of global stars.</p>
+          <p className="mt-6 max-w-xs text-body-lg text-on-surface-variant">Alpha Wings Tech Group event platform for talent discovery, showcases, runway events, and managed live experiences.</p>
           <div className="mt-6 flex gap-3 text-secondary-fixed-dim">
-            {["public", "podcasts", "movie"].map((icon) => (
-              <a key={icon} href="#home" className="grid h-10 w-10 place-items-center rounded-lg border border-white/10 bg-white/[0.04] transition hover:border-secondary-fixed-dim hover:bg-secondary-fixed-dim hover:text-[#071013]">
+            {[
+              ["photo_camera", "https://www.instagram.com/atsshow.official/"],
+              ["public", "https://www.facebook.com/profile.php?id=61590326891434"],
+              ["smart_display", "https://www.youtube.com/@ArtistTalentShow"]
+            ].map(([icon, href]) => (
+              <a key={icon} href={href} className="grid h-10 w-10 place-items-center rounded-lg border border-white/10 bg-white/[0.04] transition hover:border-secondary-fixed-dim hover:bg-secondary-fixed-dim hover:text-[#071013]">
                 <Icon>{icon}</Icon>
               </a>
             ))}
@@ -796,22 +936,31 @@ function Footer() {
         <div>
           <h3 className="font-label text-label-caps uppercase text-tertiary">Contact</h3>
           <div className="mt-7 space-y-4 text-on-surface-variant">
-            <p className="flex gap-3"><Icon className="text-secondary-fixed-dim">mail</Icon> hello@ats2026.com</p>
-            <p className="flex gap-3"><Icon className="text-secondary-fixed-dim">call</Icon> +91 90000 00000</p>
-            <p className="flex gap-3"><Icon className="text-secondary-fixed-dim">location_on</Icon> India-wide talent events</p>
+            <p className="flex gap-3"><Icon className="text-secondary-fixed-dim">mail</Icon> Events@alphabusi.com</p>
+            <p className="flex gap-3"><Icon className="text-secondary-fixed-dim">call</Icon> +91-79830 32984</p>
+            <p className="flex gap-3"><Icon className="text-secondary-fixed-dim">chat</Icon> WhatsApp: +91-79830 32984</p>
+            <p className="flex gap-3"><Icon className="text-secondary-fixed-dim">location_on</Icon> 3rd Floor, Orchid Centre, Sector 53, Gurugram, Haryana 122002</p>
           </div>
         </div>
         <div>
-          <h3 className="font-label text-label-caps uppercase text-tertiary">Newsletter</h3>
-          <p className="mt-7 text-on-surface-variant">Stay updated with the latest show results.</p>
-          <div className="mt-5 flex overflow-hidden rounded-lg bg-surface-container">
-            <input className="min-w-0 flex-1 bg-transparent px-4 py-4 text-on-surface outline-none" placeholder="Email address" type="email" />
-            <button className="grid w-16 place-items-center bg-primary text-on-primary transition hover:bg-secondary-fixed-dim"><Icon>arrow_forward</Icon></button>
+          <h3 className="font-label text-label-caps uppercase text-tertiary">YouTube</h3>
+          <p className="mt-7 text-on-surface-variant">Follow the official Artist Talent Show YouTube channel for event videos and updates.</p>
+          <div className="mt-5 grid gap-3">
+            <a href="https://www.youtube.com/@ArtistTalentShow" className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/10 px-4 py-3 font-bold text-on-surface-variant transition hover:border-secondary-fixed-dim hover:text-secondary-fixed-dim">
+              <Icon>smart_display</Icon>
+              YouTube Channel
+            </a>
+            {brochureUrl && (
+              <button onClick={onBrochure} className="inline-flex items-center justify-center gap-2 rounded-lg bg-secondary-fixed-dim px-4 py-3 font-bold text-[#071013] transition hover:bg-white">
+                <Icon>download</Icon>
+                Download Brochure
+              </button>
+            )}
           </div>
         </div>
       </div>
       <div className="mx-auto mt-16 flex max-w-container-max flex-col gap-3 border-t border-white/10 pt-8 text-sm text-on-surface-variant md:flex-row md:items-center md:justify-between">
-        <p>Copyright 2026 Artist Talent Show Season 1. Produced by Global Media Group.</p>
+        <p>Copyright 2026 Artist Talent Show Season 1. Alpha Wings Tech Group.</p>
         <div className="flex gap-4">
           <a href="#home" className="hover:text-secondary-fixed-dim">Privacy</a>
           <a href="#home" className="hover:text-secondary-fixed-dim">Terms</a>
@@ -830,6 +979,73 @@ function FooterLinks({ title, items }) {
         {items.map((item) => <a key={item} href={`#${item.toLowerCase() === "home" ? "home" : item.toLowerCase()}`} className="block text-body-lg text-on-surface-variant transition hover:text-secondary-fixed-dim">{item}</a>)}
       </div>
     </div>
+  );
+}
+
+function BrochurePage() {
+  const [data, setData] = useState({ brochures: [], homepage: defaultHomepage });
+  const [status, setStatus] = useState("Loading brochure...");
+
+  useEffect(() => {
+    api("/api/public")
+      .then((result) => {
+        setData(result);
+        setStatus("");
+      })
+      .catch((error) => setStatus(error.message || "Brochure could not be loaded."));
+  }, []);
+
+  const brochure = data.brochures?.[0];
+  const brochureUrl = brochure?.url ? assetUrl(brochure.url) : "";
+
+  return (
+    <main className="min-h-screen bg-[#050816] px-margin-mobile py-8 text-on-surface md:px-margin-desktop">
+      <div className="mx-auto max-w-container-max">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <a href="/" className="inline-flex items-center gap-2 text-sm font-bold text-secondary-fixed-dim">
+              <Icon className="text-base">arrow_back</Icon>
+              Back to website
+            </a>
+            <p className="mt-6 font-label text-label-caps uppercase text-tertiary">ATS Brochure</p>
+            <h1 className="mt-3 font-display text-display-lg-mobile text-white md:text-display-lg">Artist Talent Show Brochure</h1>
+            <p className="mt-4 max-w-2xl text-body-lg text-on-surface-variant">View, download, or open the latest published ATS brochure.</p>
+          </div>
+          {brochureUrl && (
+            <div className="flex flex-wrap gap-3">
+              <a href={brochureUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/10 px-5 py-3 font-bold text-on-surface-variant transition hover:border-secondary-fixed-dim hover:text-secondary-fixed-dim">
+                <Icon>open_in_new</Icon>
+                Open New Tab
+              </a>
+              <a href={brochureUrl} download className="inline-flex items-center justify-center gap-2 rounded-lg bg-secondary-fixed-dim px-5 py-3 font-bold text-[#071013] transition hover:bg-white">
+                <Icon>download</Icon>
+                Download
+              </a>
+            </div>
+          )}
+        </div>
+
+        <section className="mt-8 overflow-hidden rounded-lg border border-white/10 bg-[#101828]">
+          {brochureUrl ? (
+            <>
+              <div className="flex flex-col gap-2 border-b border-white/10 p-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <p className="font-bold text-white">{brochure.title || "ATS Brochure"}</p>
+                  <p className="text-sm text-on-surface-variant">{brochure.fileName}</p>
+                </div>
+                <p className="text-sm text-on-surface-variant">Mobile friendly PDF viewer</p>
+              </div>
+              <iframe title={brochure.title || "ATS Brochure"} src={brochureUrl} className="h-[72vh] w-full bg-white" />
+              <div className="border-t border-white/10 p-4 text-sm text-on-surface-variant">
+                If the PDF viewer does not appear on your device, use Open New Tab or Download.
+              </div>
+            </>
+          ) : (
+            <p className="p-8 text-center text-on-surface-variant">{status || "No brochure is published right now."}</p>
+          )}
+        </section>
+      </div>
+    </main>
   );
 }
 
@@ -878,13 +1094,18 @@ function PublicSite() {
   }, []);
 
   const hasBrochures = (data.brochures || []).length > 0;
+  const brochureUrl = data.brochures?.[0]?.url ? assetUrl(data.brochures[0].url) : "";
+  const viewBrochure = () => {
+    window.location.href = "/brochure";
+  };
 
   return (
     <>
-      <Header onBrochure={() => setBrochureOpen(true)} showBrochure={hasBrochures} />
+      <Header onBrochure={() => setBrochureOpen(true)} onViewBrochure={viewBrochure} showBrochure={hasBrochures} />
       <main>
-        <Hero onBrochure={() => setBrochureOpen(true)} onParticipate={() => setParticipantOpen(true)} showBrochure={hasBrochures} />
+        <Hero homepage={data.homepage} onBrochure={() => setBrochureOpen(true)} onViewBrochure={viewBrochure} onParticipate={() => setParticipantOpen(true)} showBrochure={hasBrochures} />
         <WhoWeAre />
+        <Essentials />
         <Stats participants={data.participants} sports={data.sports} />
         <StarAlumni participants={data.participants} />
         <SportsList sports={data.sports} />
@@ -894,7 +1115,7 @@ function PublicSite() {
         <Organizers />
         <TrustSection />
       </main>
-      <Footer />
+      <Footer brochureUrl={brochureUrl} onBrochure={() => setBrochureOpen(true)} />
       <BrochureModal open={brochureOpen} onClose={() => setBrochureOpen(false)} />
       <ParticipantModal open={participantOpen} onClose={() => setParticipantOpen(false)} onCreated={refreshPublicData} />
       <EventBookingModal event={bookingEvent} onClose={() => setBookingEvent(null)} />
@@ -993,6 +1214,16 @@ function AdminDashboard() {
 
   async function toggle(collection, item) {
     await api(`/api/${collection}/${item.id}`, { method: "PUT", body: JSON.stringify({ active: !item.active }) });
+    await refresh();
+  }
+
+  async function updateParticipantStatus(item, nextStatus) {
+    const isApproved = nextStatus === "Approved";
+    await api(`/api/participants/${item.id}`, {
+      method: "PUT",
+      body: JSON.stringify({ status: nextStatus, active: isApproved })
+    });
+    setStatus(`${item.name} marked as ${nextStatus}.`);
     await refresh();
   }
 
@@ -1125,7 +1356,8 @@ function AdminDashboard() {
 
         <section className="mt-8 grid gap-4 md:grid-cols-3 xl:grid-cols-6">
           <AdminStat label="Participants" value={db.participants.length} />
-          <AdminStat label="Active Alumni" value={db.participants.filter((item) => item.active).length} />
+          <AdminStat label="Pending" value={db.participants.filter((item) => (item.status || "Pending") === "Pending").length} />
+          <AdminStat label="Approved" value={db.participants.filter((item) => (item.status || (item.active ? "Approved" : "Pending")) === "Approved").length} />
           <AdminStat label="Sports" value={db.sports.length} />
           <AdminStat label="Events" value={db.events?.length || 0} />
           <AdminStat label="Brochures" value={db.brochures?.length || 0} />
@@ -1143,7 +1375,7 @@ function AdminDashboard() {
               <label className="flex items-center gap-2 text-on-surface-variant"><input type="checkbox" checked={participant.active} onChange={(event) => setParticipant({ ...participant, active: event.target.checked })} /> Active in Star Alumni Bank</label>
               <button className="rounded-lg bg-tertiary px-5 py-3 font-bold text-[#211006]">Add Participant</button>
             </form>
-            <AdminTable items={db.participants} columns={["code", "name", "profession"]} collection="participants" onToggle={toggle} onRemove={remove} />
+            <ParticipantReviewList items={db.participants} onStatus={updateParticipantStatus} onRemove={(id) => remove("participants", id)} />
           </Panel>
 
           <Panel title="Single Model Planner">
@@ -1312,10 +1544,56 @@ function AdminTable({ items, columns, collection, onToggle, onRemove }) {
   );
 }
 
+function ParticipantReviewList({ items, onStatus, onRemove }) {
+  return (
+    <div className="mt-5 grid gap-4">
+      {items.map((item) => {
+        const status = item.status || (item.active ? "Approved" : "Pending");
+        return (
+          <article key={item.id} className="rounded-lg border border-white/10 bg-white/[0.04] p-4">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+              <div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <p className="font-bold text-white">{item.name}</p>
+                  <span className={`rounded px-3 py-1 text-xs font-bold ${status === "Approved" ? "bg-secondary-fixed-dim text-[#071013]" : status === "Rejected" ? "bg-red-400/15 text-red-300" : "bg-tertiary/15 text-tertiary"}`}>{status}</span>
+                </div>
+                <p className="mt-2 text-sm text-on-surface-variant">{item.code} | {item.profession} | Age {item.age || "N/A"}</p>
+                <p className="mt-1 text-sm text-on-surface-variant">{item.email || "No email"} | {item.phone || "No phone"} | {item.city || "No city"}</p>
+                {item.instagram && <p className="mt-1 text-sm text-on-surface-variant">Instagram: {item.instagram}</p>}
+                <div className="mt-3 flex flex-wrap gap-3">
+                  {item.portfolioPhoto && (
+                    <a href={assetUrl(item.portfolioPhoto)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded border border-white/10 px-3 py-2 text-sm font-bold text-secondary-fixed-dim">
+                      <Icon className="text-base">image</Icon>
+                      Photo
+                    </a>
+                  )}
+                  {item.talentVideo && (
+                    <a href={assetUrl(item.talentVideo)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded border border-white/10 px-3 py-2 text-sm font-bold text-secondary-fixed-dim">
+                      <Icon className="text-base">play_circle</Icon>
+                      Video
+                    </a>
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <button onClick={() => onStatus(item, "Approved")} className="rounded border border-secondary-fixed-dim/40 px-3 py-2 text-sm font-bold text-secondary-fixed-dim">Approve</button>
+                <button onClick={() => onStatus(item, "Rejected")} className="rounded border border-red-400/30 px-3 py-2 text-sm font-bold text-red-300">Reject</button>
+                <button onClick={() => onStatus(item, "Pending")} className="rounded border border-white/10 px-3 py-2 text-sm font-bold text-on-surface-variant">Pending</button>
+                <button onClick={() => onRemove(item.id)} className="rounded border border-white/10 px-3 py-2 text-sm font-bold text-tertiary">Remove</button>
+              </div>
+            </div>
+          </article>
+        );
+      })}
+      {!items.length && <p className="rounded-lg border border-white/10 p-4 text-on-surface-variant">No participant registrations yet.</p>}
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <ErrorBoundary>
-      {window.location.pathname.startsWith("/admin") ? <AdminDashboard /> : <PublicSite />}
+      {window.location.pathname.startsWith("/admin") ? <AdminDashboard /> : window.location.pathname.startsWith("/brochure") ? <BrochurePage /> : <PublicSite />}
     </ErrorBoundary>
   );
 }
